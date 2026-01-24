@@ -7,13 +7,13 @@ export default [
 	{
 		files: ['src/**/*.ts'],
 		languageOptions: {
-			parser: tsParser
+			parser: tsParser,
 		},
 		plugins: {
-			'@typescript-eslint': tseslint
+			'@typescript-eslint': tseslint,
 		},
 		rules: {
-			...tseslint.configs.recommended.rules
+			...tseslint.configs.recommended.rules,
 		}
 	}
 ];
