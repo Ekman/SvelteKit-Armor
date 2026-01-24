@@ -36,10 +36,13 @@ jobs:
           git diff --quiet --cached || git commit -am "chore: terraform fmt"
           git push --set-upstream origin $CIRCLE_BRANCH
 workflows:
-  unit_test:
+  unit_test_lint_format:
     jobs:
       - lint_format:
           name: &lint_format lint_format
+          filters: &pr_filters
+            branches:
+              ignore: master
       - node/test:
           name: unit_test
           requires: [*lint_format]
@@ -47,9 +50,7 @@ workflows:
           executor:
             name: node/default
             resource_class: small
-          filters:
-            branches:
-              ignore: master
+          filters: *pr_filters
   deploy:
     jobs:
       - node/test:
