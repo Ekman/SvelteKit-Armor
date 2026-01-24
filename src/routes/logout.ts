@@ -3,7 +3,7 @@ import type { ArmorConfig } from "../contracts";
 import { queryParamsCreate } from "@nekm/core";
 import { ROUTE_PATH_REDIRECT_LOGOUT } from "./redirect-logout";
 import type { RouteFactory } from "./routes";
-import {urlConcat} from "../utils/utils";
+import { urlConcat } from "../utils/utils";
 
 export const ROUTE_PATH_LOGOUT = "/_auth/logout";
 
@@ -24,6 +24,6 @@ export const routeLogoutFactory: RouteFactory = (config: ArmorConfig) => {
 			});
 
 			throw redirect(302, `${logoutUrl}?${params}`);
-		}
-	}
-}
+		},
+	};
+};

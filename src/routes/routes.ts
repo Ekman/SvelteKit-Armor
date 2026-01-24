@@ -22,9 +22,9 @@ const routeFactories = Object.freeze([
 export function routeCreate(config: ArmorConfig): Map<string, Handle> {
 	return new Map(
 		routeFactories
-			.map(routeFactory => routeFactory(config))
-			.filter(route => Boolean(route))
+			.map((routeFactory) => routeFactory(config))
+			.filter((route) => Boolean(route))
 			// @ts-expect-error Incorrect typing error.
-			.map(route => [route.path, route.handle]),
+			.map((route) => [route.path, route.handle]),
 	);
 }
