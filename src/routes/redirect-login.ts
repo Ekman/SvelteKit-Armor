@@ -1,0 +1,87 @@
+import { redirect } from "@sveltejs/kit";
+import type {ArmorConfig, ArmorIdToken, ArmorTokenExchange} from "../contracts";
+import {strTrimEnd, throwIfUndefined} from "@nekm/core";
+import { createRemoteJWKSet } from "jose";
+import type { RouteFactory } from "./routes";
+import {urlConcat, isTokenExchange, STATE_KEY} from "../utils/helper";
+import {cookieGetAndDelete} from "../utils/cookie";
+import {jwtVerifyAccessToken, jwtVerifyIdToken} from "../utils/jwt";
+
+export const ROUTE_PATH_REDIRECT_LOGIN = "/_auth/redirect/login";
+
+export const routeRedirectLoginFactory: RouteFactory = (config: ArmorConfig) => {
+	const jwksUrl = new URL(config.oauth.jwksUrl ?? `${strTrimEnd(config.oauth.issuer, '/')}/.well-known/jwks.json`);
+	const tokenUrl = `${config.oauth.baseUrl}/${config.oauth.tokenPath ?? 'oauth2/token'}`;
+
+	async function exchangeCodeForToken(
+		fetch: typeof window.fetch,
+		origin: string,
+		code: string,
+	): Promise<ArmorTokenExchange> {
+		const response = await fetch(
+			tokenUrl,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/x-www-form-urlencoded",
+					"Accept": "application/json",
+				},
+				body: new URLSearchParams({
+					grant_type: "authorization_code",
+					client_id: config.oauth.clientId,
+					client_secret: config.oauth.clientSecret,
+					code,
+					redirect_uri: urlConcat(origin, ROUTE_PATH_REDIRECT_LOGIN),
+				}).toString(),
+			}
+		);
+
+		if (!response.ok) {
+			const error = await response.text();
+			throw new Error(`Token exchange failed: ${error}`);
+		}
+
+		const token = await response.json();
+
+		if (!isTokenExchange(token)) {
+			throw new Error("Response is not a valid token exchange.");
+		}
+
+		return token;
+	}
+
+	return {
+		path: ROUTE_PATH_REDIRECT_LOGIN,
+		async handle({ event }) {
+			const state = event.url.searchParams.get("state") ?? undefined;
+			const stateCookie = cookieGetAndDelete(event.cookies, STATE_KEY);
+
+			if (state !== stateCookie) {
+				throw new Error("State do not match");
+			}
+
+			const code = event.url.searchParams.get("code") ?? undefined;
+			throwIfUndefined(code);
+
+			const exchange = await exchangeCodeForToken(fetch, event.url.origin, code);
+
+			const jwks = createRemoteJWKSet(jwksUrl);
+
+			const [idToken, accessToken] = await Promise.all([
+				jwtVerifyIdToken(config, jwks, exchange.id_token),
+				jwtVerifyAccessToken(config, jwks, exchange.access_token),
+			]);
+
+			await config.session.login(
+				event,
+				{
+					exchange,
+					idToken: idToken as ArmorIdToken,
+					accessToken,
+				},
+			);
+
+			throw redirect(302, "/");
+		}
+	}
+}

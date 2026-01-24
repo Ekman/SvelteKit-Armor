@@ -1,0 +1,75 @@
+{
+  "name": "@nekm/sveltekit-armor",
+  "version": "0.0.1",
+  "description": "Zero-config OAuth protection for SvelteKit",
+  "license": "MIT",
+  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "import": "./dist/index.esm.js",
+    "types": "./dist/index.d.ts",
+    "default": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.esm.js",
+  "scripts": {
+    "build": "microbundle --format esm,cjs --target node",
+    "test": "jest"
+  },
+  "maintainers": [
+    {
+      "email": "niklas@niklasekman.solutions",
+      "name": "Niklas Ekman",
+      "url": "https://www.niklasekman.solutions"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ekman/TypeScript-Core.git"
+  },
+  "homepage": "https://github.com/Ekman/TypeScript-Core#readme",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "author": {
+    "name": "Niklas Ekman",
+    "email": "niklas@niklasekman.solutions"
+  },
+  "keywords": [
+    "sveltekit",
+    "svelte",
+    "auth",
+    "authentication",
+    "oauth",
+    "oauth2",
+    "oidc",
+    "openid-connect",
+    "cognito",
+    "auth0",
+    "keycloak",
+    "security",
+    "protect",
+    "session",
+    "authorization",
+    "sveltekit-auth",
+    "sveltekit-oauth"
+  ],
+  "sideEffects": false,
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.13",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.0.10",
+    "jest": "^30.2.0",
+    "jest-junit": "^16.0.0",
+    "microbundle": "^0.15.1",
+    "ts-jest": "^29.4.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@nekm/core": "^1.7.0",
+    "@sveltejs/kit": "^2.50.1",
+    "jose": "^6.1.3"
+  }
+}
