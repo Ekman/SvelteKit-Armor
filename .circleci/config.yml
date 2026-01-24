@@ -3,7 +3,7 @@ orbs:
   node: circleci/node@7
 jobs:
   deploy:
-    executor:
+    executor: &executor
       name: node/default
       resource_class: small
     steps:
@@ -21,9 +21,7 @@ jobs:
             echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
             npm publish --access public --tag latest
   lint_format:
-    executor:
-      name: node/default
-      resource_class: small
+    executor: *executor
     steps:
       - checkout
       - node/install-packages
@@ -47,18 +45,14 @@ workflows:
           name: unit_test
           requires: [*lint_format]
           test-results-for: jest
-          executor:
-            name: node/default
-            resource_class: small
+          executor: *executor
           filters: *pr_filters
   deploy:
     jobs:
       - node/test:
           name: &unit_test unit_test
           test-results-for: jest
-          executor:
-            name: node/default
-            resource_class: small
+          executor: *executor
           filters: &deploy_filters
             tags:
               only: /^\d+\.\d+\.\d+$/
