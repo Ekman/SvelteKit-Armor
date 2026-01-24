@@ -1,11 +1,19 @@
-/** @type {import('@typescript-eslint/utils').JSONSchema4Object} */
-export default {
-	root: true,
-	parser: '@typescript-eslint/parser',
-	plugins: ['@typescript-eslint'],
-	extends: [
-		'eslint:recommended',
-		'@typescript-eslint/recommended',
-		'prettier'
-	],
-};
+import js from '@eslint/js';
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
+
+export default [
+	js.configs.recommended,
+	{
+		files: ['src/**/*.ts'],
+		languageOptions: {
+			parser: tsParser
+		},
+		plugins: {
+			'@typescript-eslint': tseslint
+		},
+		rules: {
+			...tseslint.configs.recommended.rules
+		}
+	}
+];
