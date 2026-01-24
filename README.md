@@ -23,7 +23,7 @@ export const handle = armor({
 		oauth: {
       clientId: 'foo',
       clientSecret: 'bar',
-      baseUrl: 'myapp.auth.eu-west-1.amazoncognito.com',
+      baseUrl: 'https://myapp.auth.eu-west-1.amazoncognito.com',
       issuer: 'https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_ABC123xyz',
     }
 });
