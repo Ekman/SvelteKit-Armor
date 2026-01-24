@@ -42,7 +42,7 @@ workflows:
           name: &lint_format lint_format
           filters: &pr_filters
             branches:
-              ignore: master
+              ignore: main
       - node/test:
           name: unit_test
           requires: [*lint_format]
