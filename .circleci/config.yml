@@ -27,12 +27,13 @@ jobs:
     steps:
       - checkout
       - node/install-packages
-      - run: npx eslint --fix src
+      - run: npx eslint --max-warnings=0 --fix src
       - run: npx prettier --write src
       - run: |-
-          git config --global user.name "CircleCI"
-          git config --global user.email "circleci@niklasekman.solutions"
-          git diff --quiet || git commit -am "chore: terraform fmt"
+          git config user.name "CircleCI"
+          git config user.email "circleci@niklasekman.solutions"
+          git add .
+          git diff --quiet || git commit -am "chore: terraform fmt [skip ci]"
           git push
 workflows:
   unit_test:
