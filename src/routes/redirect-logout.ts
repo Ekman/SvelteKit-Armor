@@ -5,8 +5,10 @@ import type { RouteFactory } from "./routes";
 
 export const ROUTE_PATH_REDIRECT_LOGOUT = "/_auth/redirect/logout";
 
-export const routeRedirectLogoutFactory: RouteFactory = (config: ArmorConfig) => {
-		// Check if the oauth provider supports a logout path.
+export const routeRedirectLogoutFactory: RouteFactory = (
+	config: ArmorConfig,
+) => {
+	// Check if the oauth provider supports a logout path.
 	if (!config.oauth.logoutPath) {
 		return undefined;
 	}
@@ -18,6 +20,6 @@ export const routeRedirectLogoutFactory: RouteFactory = (config: ArmorConfig) =>
 		async handle({ event }) {
 			await logout(event);
 			throw redirect(302, "/");
-		}
-	}
-}
+		},
+	};
+};

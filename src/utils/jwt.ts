@@ -1,7 +1,11 @@
-import {ArmorConfig} from "../contracts";
-import {jwtVerify, JWTVerifyGetKey, JWTVerifyOptions} from "jose";
+import { ArmorConfig } from "../contracts";
+import { jwtVerify, JWTVerifyGetKey, JWTVerifyOptions } from "jose";
 
-export function jwtVerifyIdToken(config: ArmorConfig, jwks: JWTVerifyGetKey, idToken: string) {
+export function jwtVerifyIdToken(
+	config: ArmorConfig,
+	jwks: JWTVerifyGetKey,
+	idToken: string,
+) {
 	return jwtVerifyToken(
 		jwks,
 		{
@@ -12,11 +16,19 @@ export function jwtVerifyIdToken(config: ArmorConfig, jwks: JWTVerifyGetKey, idT
 	);
 }
 
-export function jwtVerifyAccessToken(config: ArmorConfig, jwks: JWTVerifyGetKey, accessToken: string) {
+export function jwtVerifyAccessToken(
+	config: ArmorConfig,
+	jwks: JWTVerifyGetKey,
+	accessToken: string,
+) {
 	return jwtVerifyToken(jwks, { issuer: config.oauth.issuer }, accessToken);
 }
 
-async function jwtVerifyToken(jwks: JWTVerifyGetKey, options: JWTVerifyOptions, token: string) {
+async function jwtVerifyToken(
+	jwks: JWTVerifyGetKey,
+	options: JWTVerifyOptions,
+	token: string,
+) {
 	const { payload } = await jwtVerify(token, jwks, options);
 
 	return payload;

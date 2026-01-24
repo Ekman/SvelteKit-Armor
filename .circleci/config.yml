@@ -20,11 +20,29 @@ jobs:
           command: |-
             echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
             npm publish --access public --tag "$CIRCLE_TAG"
+  lint-format:
+    executor:
+      name: node/default
+      resource_class: small
+    steps:
+      - checkout
+      - node/install-packages
+      - run: npx eslint --max-warnings=0 --fix src
+      - run: npx prettier --write src
+      - run: |-
+          git config user.name "CircleCI"
+          git config user.email "circleci@niklasekman.solutions"
+          git add .
+          git diff --quiet --cached || git commit -am "chore: terraform fmt"
+          git push --set-upstream origin $CIRCLE_BRANCH
 workflows:
   unit_test:
     jobs:
+      - lint-format:
+          name: &lint_format lint-format
       - node/test:
           name: unit_test
+          requires: [*lint_format]
           test-results-for: jest
           executor:
             name: node/default

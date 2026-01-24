@@ -1,10 +1,10 @@
-import {error, redirect, type Handle, Cookies} from "@sveltejs/kit";
+import { error, redirect, type Handle, Cookies } from "@sveltejs/kit";
 import { ROUTE_PATH_LOGIN } from "./routes/login";
-import type {ArmorConfig, ArmorTokens} from "./contracts";
+import type { ArmorConfig, ArmorTokens } from "./contracts";
 import { ROUTE_PATH_LOGOUT } from "./routes/logout";
 import { routeCreate } from "./routes/routes";
-import {COOKIE_TOKENS, cookieGet} from "./utils/cookie";
-import {throwIfUndefined} from "@nekm/core";
+import { COOKIE_TOKENS, cookieGet } from "./utils/cookie";
+import { throwIfUndefined } from "@nekm/core";
 
 export type { ArmorConfig, ArmorTokens };
 
@@ -13,8 +13,9 @@ export const ARMOR_LOGOUT = ROUTE_PATH_LOGOUT;
 
 export function armor(config: ArmorConfig): Handle {
 	const routes = routeCreate(config);
-	const sessionExists = config.session.exists
-		?? ((event) => Boolean(event.cookies.get(COOKIE_TOKENS)))
+	const sessionExists =
+		config.session.exists ??
+		((event) => Boolean(event.cookies.get(COOKIE_TOKENS)));
 
 	return async ({ event, resolve }) => {
 		const routeHandle = routes.get(event.url.pathname);
@@ -33,7 +34,7 @@ export function armor(config: ArmorConfig): Handle {
 		}
 
 		return resolve(event);
-	}
+	};
 }
 
 export function armorCookiesGetTokens(cookies: Cookies): ArmorTokens {
