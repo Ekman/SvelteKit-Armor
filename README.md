@@ -1,6 +1,6 @@
 # SvelteKit Armor
 
-SvelteKit armor is a hihgly opinonated, low-config OAuth protection for SvelteKit. The purpose of this library is not to be highly customizable, but rather  get you up-and-running with a login for your SvelteKit app in no time. Register for Auth0 or spin up Cognito, write a minimal config and, abuse the fact that the `authorization_code` grant gives you a login page - voilà!
+Highly opinionated, zero-config OAuth protection for SvelteKit apps. Get login working in 2 lines of code - no complex setup, no custom UI, just secure authentication using Auth0/Cognito/Keycloak hosted UI.
 
 ## Installation
 Install with your favorite package manager:
@@ -26,7 +26,7 @@ export const handle = armor({
 });
 ```
 
-The **entire** application is now protected by login!
+Done. Entire app now requires login.
 
 ## Examples
 
@@ -37,18 +37,11 @@ Assume you only want to protect routes prefixed by `admin`. Create a `src/hooks.
 ```js
 import { armor } from '@nekm/sveltekit-armor';
 
-const a = armor({
-		oauth: {
-      baseUrl: 'myapp.auth.eu-west-1.amazoncognito.com',
-      clientId: 'foo',
-      clientSecret: 'bar',
-      issuer: 'https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_ABC123xyz',
-    }
-});
+const protect = armor({ /* config */ });
 
 export const handle = ({ event, resolve }) => {
 	if (event.url.pathname.startsWith('/admin')) {
-		return a({ event, resolve });
+		return protect({ event, resolve });
 	}
 
 	return resolve(event);
