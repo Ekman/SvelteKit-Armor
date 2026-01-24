@@ -34,7 +34,7 @@ jobs:
           git diff --quiet --cached || git commit -am "chore: terraform fmt"
           git push --set-upstream origin $CIRCLE_BRANCH
 workflows:
-  unit_test_lint_format:
+  main:
     jobs:
       - lint_format:
           name: &lint_format lint_format
