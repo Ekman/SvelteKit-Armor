@@ -1,5 +1,8 @@
 # SvelteKit Armor
 
+| **Note** : `The library is being tested in production and will be tagged 1.0.0 once I'm confident it works` |
+| ----------------------------------|
+
 Highly opinionated, minimal config OAuth protection for [SvelteKit](https://svelte.dev/) apps. Get login working in few lines of code - no complex setup, no custom UI, just secure authentication using OAuth 2.0/OIDC IdP hosted UI.
 
 ## Installation
