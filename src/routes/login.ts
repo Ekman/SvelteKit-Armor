@@ -5,7 +5,7 @@ import { ROUTE_PATH_REDIRECT_LOGIN } from "./redirect-login";
 import { randomUUID } from "node:crypto";
 import type { RouteFactory } from "./routes";
 import {cookieSet} from "../utils/cookie";
-import {urlConcat, STATE_KEY} from "../utils/helper";
+import {urlConcat, STATE_KEY} from "../utils/utils";
 
 export const ROUTE_PATH_LOGIN = "/_auth/login";
 

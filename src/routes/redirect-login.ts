@@ -3,7 +3,7 @@ import type {ArmorConfig, ArmorIdToken, ArmorTokenExchange} from "../contracts";
 import {strTrimEnd, throwIfUndefined} from "@nekm/core";
 import { createRemoteJWKSet } from "jose";
 import type { RouteFactory } from "./routes";
-import {urlConcat, isTokenExchange, STATE_KEY} from "../utils/helper";
+import {urlConcat, isTokenExchange, STATE_KEY} from "../utils/utils";
 import {COOKIE_TOKENS, cookieGetAndDelete, cookieSet} from "../utils/cookie";
 import {jwtVerifyAccessToken, jwtVerifyIdToken} from "../utils/jwt";
 

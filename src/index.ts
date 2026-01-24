@@ -6,6 +6,8 @@ import { routeCreate } from "./routes/routes";
 import {COOKIE_TOKENS, cookieGet} from "./utils/cookie";
 import {throwIfUndefined} from "@nekm/core";
 
+export type { ArmorConfig, ArmorTokens };
+
 export const ARMOR_LOGIN = ROUTE_PATH_LOGIN;
 export const ARMOR_LOGOUT = ROUTE_PATH_LOGOUT;
 
