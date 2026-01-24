@@ -37,13 +37,11 @@ workflows:
   main:
     jobs:
       - lint_format:
-          name: &lint_format lint_format
           filters:
             branches:
               ignore: main
       - node/test:
           name: unit_test
-          requires: [*lint_format]
           test-results-for: jest
           executor: *executor
   deploy:
