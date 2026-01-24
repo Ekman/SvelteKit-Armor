@@ -34,7 +34,7 @@ jobs:
           git config user.email "circleci@niklasekman.solutions"
           git add .
           git diff --quiet || git commit -am "chore: terraform fmt"
-          git push
+          git push --set-upstream origin $CIRCLE_BRANCH
 workflows:
   unit_test:
     jobs:
