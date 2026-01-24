@@ -18,7 +18,7 @@ export const routeRedirectLoginFactory: RouteFactory = (config: ArmorConfig) => 
 		?? ((event, tokens) => cookieSet(event.cookies, COOKIE_TOKENS, tokens))
 
 	async function exchangeCodeForToken(
-		fetch: typeof window.fetch,
+		fetch: typeof global.fetch,
 		origin: string,
 		code: string,
 	): Promise<ArmorTokenExchange> {

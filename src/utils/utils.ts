@@ -6,15 +6,18 @@ export function urlConcat(origin: string, path: string): string {
 }
 
 export function isTokenExchange(value: unknown): value is ArmorTokenExchange {
+	if (typeof value !== 'object' || value === null) return false;
+
+	const obj = value as Record<string, unknown>;
+
 	return (
-		typeof value === 'object' &&
-		value !== null &&
-		typeof (value as any).access_token === 'string' &&
-		(value as any).token_type === 'Bearer' &&
-		typeof (value as any).expires_in === 'number' &&
+		typeof obj.access_token === 'string' &&
+		obj.token_type === 'Bearer' &&
+		typeof obj.expires_in === 'number' &&
 		// Optional fields
-		(typeof (value as any).id_token === 'string' || (value as any).id_token === undefined) &&
-		(typeof (value as any).refresh_token === 'string' || (value as any).refresh_token === undefined) &&
-		(typeof (value as any).scope === 'string' || (value as any).scope === undefined)
+		(typeof obj.id_token === 'string' || obj.id_token === undefined) &&
+		(typeof obj.refresh_token === 'string' || obj.refresh_token === undefined) &&
+		(typeof obj.scope === 'string' || obj.scope === undefined)
 	);
 }
+
