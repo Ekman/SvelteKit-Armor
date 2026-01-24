@@ -19,7 +19,7 @@ jobs:
           name: NPM publish
           command: |-
             echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
-            npm publish --access=public
+            npm publish --access public --tag "$CIRCLE_TAG"
 workflows:
   unit_test:
     jobs:
