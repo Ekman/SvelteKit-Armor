@@ -1,6 +1,6 @@
 # SvelteKit Armor
 
-Highly opinionated, zero-config OAuth protection for SvelteKit apps. Get login working in 2 lines of code - no complex setup, no custom UI, just secure authentication using Auth0/Cognito/Keycloak hosted UI.
+Highly opinionated, minimal-config OAuth protection for SvelteKit apps. Get login working in few lines of code - no complex setup, no custom UI, just secure authentication using Auth0/Cognito/Keycloak hosted UI.
 
 ## Installation
 Install with your favorite package manager:
