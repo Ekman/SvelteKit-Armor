@@ -4,8 +4,8 @@ import { queryParamsCreate } from "@nekm/core";
 import { ROUTE_PATH_REDIRECT_LOGIN } from "./redirect-login";
 import { randomUUID } from "node:crypto";
 import type { RouteFactory } from "./routes";
-import {cookieSet} from "../utils/cookie";
-import {urlConcat, STATE_KEY} from "../utils/utils";
+import {COOKIE_STATE, cookieSet} from "../utils/cookie";
+import {urlConcat} from "../utils/utils";
 
 export const ROUTE_PATH_LOGIN = "/_auth/login";
 
@@ -16,7 +16,7 @@ export const routeLoginFactory: RouteFactory = (config: ArmorConfig) => {
 		path: ROUTE_PATH_LOGIN,
 		async handle({ event }) {
 			const state = randomUUID();
-			cookieSet(event.cookies, STATE_KEY, state);
+			cookieSet(event.cookies, COOKIE_STATE, state);
 
 			const params = queryParamsCreate({
 				client_id: config.oauth.clientId,

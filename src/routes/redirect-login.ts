@@ -3,8 +3,8 @@ import type {ArmorConfig, ArmorIdToken, ArmorTokenExchange} from "../contracts";
 import {strTrimEnd, throwIfUndefined} from "@nekm/core";
 import { createRemoteJWKSet } from "jose";
 import type { RouteFactory } from "./routes";
-import {urlConcat, isTokenExchange, STATE_KEY} from "../utils/utils";
-import {COOKIE_TOKENS, cookieGetAndDelete, cookieSet} from "../utils/cookie";
+import {urlConcat, isTokenExchange} from "../utils/utils";
+import {COOKIE_STATE, COOKIE_TOKENS, cookieGetAndDelete, cookieSet} from "../utils/cookie";
 import {jwtVerifyAccessToken, jwtVerifyIdToken} from "../utils/jwt";
 
 export const ROUTE_PATH_REDIRECT_LOGIN = "/_auth/redirect/login";
@@ -58,7 +58,7 @@ export const routeRedirectLoginFactory: RouteFactory = (config: ArmorConfig) => 
 		path: ROUTE_PATH_REDIRECT_LOGIN,
 		async handle({ event }) {
 			const state = event.url.searchParams.get("state") ?? undefined;
-			const stateCookie = cookieGetAndDelete(event.cookies, STATE_KEY);
+			const stateCookie = cookieGetAndDelete(event.cookies, COOKIE_STATE);
 
 			if (state !== stateCookie) {
 				throw new Error("State do not match");

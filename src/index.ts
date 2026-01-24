@@ -1,4 +1,4 @@
-import {error, redirect, type Handle, RequestEvent} from "@sveltejs/kit";
+import {error, redirect, type Handle, Cookies} from "@sveltejs/kit";
 import { ROUTE_PATH_LOGIN } from "./routes/login";
 import type {ArmorConfig, ArmorTokens} from "./contracts";
 import { ROUTE_PATH_LOGOUT } from "./routes/logout";
@@ -36,8 +36,8 @@ export function armor(config: ArmorConfig): Handle {
 	}
 }
 
-export function armorGetTokens(event: RequestEvent): ArmorTokens {
-	const tokens = cookieGet<ArmorTokens>(event.cookies, COOKIE_TOKENS);
+export function armorCookiesGetTokens(cookies: Cookies): ArmorTokens {
+	const tokens = cookieGet<ArmorTokens>(cookies, COOKIE_TOKENS);
 	throwIfUndefined(tokens);
 	return tokens;
 }

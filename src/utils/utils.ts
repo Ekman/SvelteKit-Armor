@@ -1,8 +1,6 @@
 import { strTrimEnd } from "@nekm/core";
 import type {ArmorTokenExchange} from "../contracts";
 
-export const STATE_KEY = 'oauth_state';
-
 export function urlConcat(origin: string, path: string): string {
 	return `${strTrimEnd(origin, "/")}/${path}`;
 }
