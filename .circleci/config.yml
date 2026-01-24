@@ -20,7 +20,7 @@ jobs:
           command: |-
             echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
             npm publish --access public --tag "$CIRCLE_TAG"
-  lint-format:
+  lint_format:
     executor:
       name: node/default
       resource_class: small
@@ -38,8 +38,8 @@ jobs:
 workflows:
   unit_test:
     jobs:
-      - lint-format:
-          name: &lint_format lint-format
+      - lint_format:
+          name: &lint_format lint_format
       - node/test:
           name: unit_test
           requires: [*lint_format]
