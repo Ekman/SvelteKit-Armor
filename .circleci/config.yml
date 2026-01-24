@@ -33,7 +33,7 @@ jobs:
           git config user.name "CircleCI"
           git config user.email "circleci@niklasekman.solutions"
           git add .
-          git diff --quiet || git commit -am "chore: terraform fmt [skip ci]"
+          git diff --quiet || git commit -am "chore: terraform fmt"
           git push
 workflows:
   unit_test:
