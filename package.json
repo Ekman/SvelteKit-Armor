@@ -25,9 +25,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Ekman/TypeScript-Core.git"
+    "url": "git+https://github.com/Ekman/SvelteKit-Armor.git"
   },
-  "homepage": "https://github.com/Ekman/TypeScript-Core#readme",
+  "homepage": "https://github.com/Ekman/SvelteKit-Armor#readme",
   "files": [
     "dist",
     "src"
