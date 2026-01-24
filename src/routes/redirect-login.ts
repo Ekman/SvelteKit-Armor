@@ -4,7 +4,7 @@ import {strTrimEnd, throwIfUndefined} from "@nekm/core";
 import { createRemoteJWKSet } from "jose";
 import type { RouteFactory } from "./routes";
 import {urlConcat, isTokenExchange, STATE_KEY} from "../utils/helper";
-import {cookieGetAndDelete} from "../utils/cookie";
+import {COOKIE_TOKENS, cookieGetAndDelete, cookieSet} from "../utils/cookie";
 import {jwtVerifyAccessToken, jwtVerifyIdToken} from "../utils/jwt";
 
 export const ROUTE_PATH_REDIRECT_LOGIN = "/_auth/redirect/login";
@@ -12,6 +12,10 @@ export const ROUTE_PATH_REDIRECT_LOGIN = "/_auth/redirect/login";
 export const routeRedirectLoginFactory: RouteFactory = (config: ArmorConfig) => {
 	const jwksUrl = new URL(config.oauth.jwksUrl ?? `${strTrimEnd(config.oauth.issuer, '/')}/.well-known/jwks.json`);
 	const tokenUrl = `${config.oauth.baseUrl}/${config.oauth.tokenPath ?? 'oauth2/token'}`;
+
+	const sessionLogin =
+		config.session.login
+		?? ((event, tokens) => cookieSet(event.cookies, COOKIE_TOKENS, tokens))
 
 	async function exchangeCodeForToken(
 		fetch: typeof window.fetch,
@@ -72,7 +76,7 @@ export const routeRedirectLoginFactory: RouteFactory = (config: ArmorConfig) => 
 				jwtVerifyAccessToken(config, jwks, exchange.access_token),
 			]);
 
-			await config.session.login(
+			await sessionLogin(
 				event,
 				{
 					exchange,

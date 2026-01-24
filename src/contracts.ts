@@ -30,8 +30,8 @@ export interface ArmorTokens {
 
 export interface ArmorConfig {
 	readonly session: {
-		readonly exists: (event: RequestEvent) => Promise<boolean> | boolean;
-		readonly login: (event: RequestEvent, tokens: ArmorTokens) => Promise<void> | void;
+		readonly exists?: (event: RequestEvent) => Promise<boolean> | boolean;
+		readonly login?: (event: RequestEvent, tokens: ArmorTokens) => Promise<void> | void;
 		readonly logout?: (event: RequestEvent) => Promise<void> | void;
 	};
 	readonly oauth: {

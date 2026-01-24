@@ -1,5 +1,7 @@
 import {Cookies} from "@sveltejs/kit";
 
+export const COOKIE_TOKENS = 'tokens';
+
 const cookieDeleteOptions = Object.freeze({ path: '/' });
 
 const cookieSetOptions = Object.freeze({
@@ -10,18 +12,26 @@ const cookieSetOptions = Object.freeze({
 	maxAge: 1800, // 30 minutes
 },);
 
-export function cookieSet(cookies: Cookies, key: string, value: string) {
-	cookies.set(key, value, cookieSetOptions);
+export function cookieSet(cookies: Cookies, key: string, value: string | object) {
+	cookies.set(
+		key,
+		JSON.stringify(value),
+		cookieSetOptions,
+	);
 }
 
-export function cookieGetAndDelete(cookies: Cookies, key: string): string | undefined {
-	const value = cookies.get(key);
+export function cookieGetAndDelete<T>(cookies: Cookies, key: string): T | undefined {
+	const value = cookieGet<T>(cookies, key);
 
-	if (!value) {
-		return undefined;
+	if (value) {
+		cookies.delete(key, cookieDeleteOptions);
 	}
 
-	cookies.delete(key, cookieDeleteOptions);
-
 	return value;
+}
+
+export function cookieGet<T>(cookies: Cookies, key: string): T | undefined {
+	const value = cookies.get(key);
+
+	return !value ? undefined : JSON.parse(value);
 }
