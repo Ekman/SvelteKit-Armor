@@ -2,10 +2,7 @@ import { strTrimEnd, strTrimStart } from "@nekm/core";
 import type { ArmorTokenExchange } from "../contracts";
 
 export function urlConcat(origin: string, path: string): string {
-	return [
-		strTrimEnd(origin, "/"),
-		strTrimStart(path, "/"),
-	].join("/");
+	return [strTrimEnd(origin, "/"), strTrimStart(path, "/")].join("/");
 }
 
 export function isTokenExchange(value: unknown): value is ArmorTokenExchange {
