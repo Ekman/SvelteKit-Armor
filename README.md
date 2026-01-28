@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > The library is being tested in production and will be tagged `1.0.0` once I'm confident it works.
 
-Highly opinionated, minimal config OAuth protection for [SvelteKit](https://svelte.dev/) apps. Get login working in few lines of code - no complex setup, no custom UI, just secure authentication using OAuth 2.0/OIDC IdP hosted UI.
+Highly opinionated, minimal config OAuth protection for [SvelteKit](https://svelte.dev/) apps. Get login working in few lines of code - no complex setup, no custom UI, just secure authentication using your own OAuth 2.0/OIDC IdP hosted UI, such as [AWS Cognito](https://aws.amazon.com/pm/cognito/) or [auth0](https://auth0.com/).
 
 ## Installation
 Install with your favorite package manager:
