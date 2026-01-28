@@ -9,7 +9,7 @@ Highly opinionated, minimal config OAuth protection for [SvelteKit](https://svel
 Install with your favorite package manager:
 
 ```bash
-npm install --save @nekm/sveltekit-armor
+npm install --save @nekm/sveltekit-armor @sveltejs/kit
 ```
 
 ## Usage
