@@ -57,6 +57,7 @@
   ],
   "sideEffects": false,
   "devDependencies": {
+    "@sveltejs/kit": "^2.50.1",
     "@tsconfig/recommended": "^1.0.13",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.0.10",
@@ -74,7 +75,9 @@
   },
   "dependencies": {
     "@nekm/core": "^1.7.0",
-    "@sveltejs/kit": "^2.50.1",
     "jose": "^6.1.3"
+  },
+  "peerDependencies": {
+    "@sveltejs/kit": "^2.50.1"
   }
 }
