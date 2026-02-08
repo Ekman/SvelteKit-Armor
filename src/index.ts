@@ -70,7 +70,7 @@ export async function armorConfigFromOpenId(
 			tokenEndpoint: body.token_endpoint,
 			authorizeEndpoint: body.authorization_endpoint,
 			issuer: body.issuer,
-			jwksUrl: body.jwks_uri,
+			jwksEndpoint: body.jwks_uri,
 			logoutEndpoint: body.end_session_endpoint ?? undefined,
 		},
 	};
