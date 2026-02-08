@@ -3,7 +3,7 @@ import type { ArmorConfig } from "../contracts";
 import { noop } from "@nekm/core";
 import type { RouteFactory } from "./routes";
 
-export const ROUTE_PATH_REDIRECT_LOGOUT = "/_auth/redirect/logout";
+export const ROUTE_PATH_REDIRECT_LOGOUT = "/_armor/redirect/logout";
 
 export const routeRedirectLogoutFactory: RouteFactory = (
 	config: ArmorConfig,

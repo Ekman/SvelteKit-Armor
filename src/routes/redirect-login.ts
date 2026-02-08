@@ -16,7 +16,7 @@ import {
 } from "../utils/cookie";
 import { jwtVerifyAccessToken, jwtVerifyIdToken } from "../utils/jwt";
 
-export const ROUTE_PATH_REDIRECT_LOGIN = "/_auth/redirect/login";
+export const ROUTE_PATH_REDIRECT_LOGIN = "/_armor/redirect/login";
 
 export const routeRedirectLoginFactory: RouteFactory = (
 	config: ArmorConfig,

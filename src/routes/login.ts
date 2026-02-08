@@ -7,7 +7,7 @@ import type { RouteFactory } from "./routes";
 import { COOKIE_STATE, cookieSet } from "../utils/cookie";
 import { urlConcat } from "../utils/utils";
 
-export const ROUTE_PATH_LOGIN = "/_auth/login";
+export const ROUTE_PATH_LOGIN = "/_armor/login";
 
 export const routeLoginFactory: RouteFactory = (config: ArmorConfig) => {
 	const authorizeUrl = `${config.oauth.baseUrl}/${config.oauth.authorizePath ?? "/oauth2/authorize"}`;
