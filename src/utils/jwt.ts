@@ -7,7 +7,6 @@ export function jwtVerifyIdToken(
 	idToken: string,
 ): Promise<JWTPayload> {
 	return jwtVerifyToken(
-		config,
 		jwks,
 		{
 			issuer: config.oauth.issuer,
@@ -28,11 +27,10 @@ export function jwtVerifyAccessToken(
 		opts.audience = config.oauth.audience;
 	}
 
-	return jwtVerifyToken(config, jwks, opts, accessToken);
+	return jwtVerifyToken(jwks, opts, accessToken);
 }
 
 async function jwtVerifyToken(
-	config: ArmorConfig,
 	jwks: JWTVerifyGetKey,
 	opts: JWTVerifyOptions,
 	token: string,
