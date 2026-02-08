@@ -14,7 +14,7 @@ import {
 	cookieGetAndDelete,
 	cookieSet,
 } from "../utils/cookie";
-import { jwtVerifyAccessToken, jwtVerifyIdToken } from "../utils/jwt";
+import { jwtVerifyAndDecryptAccessToken, jwtVerifyAndDecryptIdToken } from "../utils/jwt";
 
 export const ROUTE_PATH_REDIRECT_LOGIN = "/_armor/redirect/login";
 
@@ -90,8 +90,8 @@ export const routeRedirectLoginFactory: RouteFactory = (
 			const jwks = createRemoteJWKSet(jwksUrl);
 
 			const [idToken, accessToken] = await Promise.all([
-				jwtVerifyIdToken(config, jwks, exchange.id_token),
-				jwtVerifyAccessToken(config, jwks, exchange.access_token),
+				jwtVerifyAndDecryptIdToken(config, jwks, exchange.id_token),
+				jwtVerifyAndDecryptAccessToken(config, jwks, exchange.access_token),
 			]);
 
 			await sessionLogin(event, {
