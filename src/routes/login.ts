@@ -10,8 +10,9 @@ import { urlConcat } from "../utils/utils";
 export const ROUTE_PATH_LOGIN = "/_armor/login";
 
 export const routeLoginFactory: RouteFactory = (config: ArmorConfig) => {
-	const authorizeEndpoint = config.oauth.authorizeEndpoint
-		?? urlConcat( config.oauth.baseUrl,"oauth2/authorize");
+	const authorizeEndpoint =
+		config.oauth.authorizeEndpoint ??
+		urlConcat(config.oauth.baseUrl, "oauth2/authorize");
 
 	return {
 		path: ROUTE_PATH_LOGIN,
