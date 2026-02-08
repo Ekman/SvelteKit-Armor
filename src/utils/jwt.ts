@@ -1,19 +1,12 @@
 import { ArmorConfig } from "../contracts";
-import {
-	jwtDecrypt,
-	JWTPayload,
-	jwtVerify,
-	JWTVerifyGetKey,
-	JWTVerifyOptions,
-} from "jose";
+import { JWTPayload, jwtVerify, JWTVerifyGetKey, JWTVerifyOptions } from "jose";
 
-export function jwtVerifyAndDecryptIdToken(
+export function jwtVerifyIdToken(
 	config: ArmorConfig,
 	jwks: JWTVerifyGetKey,
 	idToken: string,
 ): Promise<JWTPayload> {
-	return jwtVerifyAndDecryptToken(
-		config,
+	return jwtVerifyToken(
 		jwks,
 		{
 			issuer: config.oauth.issuer,
@@ -23,36 +16,25 @@ export function jwtVerifyAndDecryptIdToken(
 	);
 }
 
-export function jwtVerifyAndDecryptAccessToken(
+export function jwtVerifyAccessToken(
 	config: ArmorConfig,
 	jwks: JWTVerifyGetKey,
 	accessToken: string,
 ): Promise<JWTPayload> {
-	return jwtVerifyAndDecryptToken(
-		config,
-		jwks,
-		{ issuer: config.oauth.issuer },
-		accessToken,
-	);
+	const opts: JWTVerifyOptions = { issuer: config.oauth.issuer };
+
+	if (config.oauth.audience) {
+		opts.audience = config.oauth.audience;
+	}
+
+	return jwtVerifyToken(jwks, opts, accessToken);
 }
 
-function jwtIsEncryptedToken(token: string): boolean {
-	const parts = token.split(".");
-	return parts.length === 5;
-}
-
-async function jwtVerifyAndDecryptToken(
-	config: ArmorConfig,
+async function jwtVerifyToken(
 	jwks: JWTVerifyGetKey,
 	opts: JWTVerifyOptions,
 	token: string,
 ): Promise<JWTPayload> {
-	if (jwtIsEncryptedToken(token)) {
-		const secret = new TextEncoder().encode(config.oauth.clientSecret);
-		const { payload } = await jwtDecrypt(token, secret, opts);
-		return payload;
-	}
-
 	const { payload } = await jwtVerify(token, jwks, opts);
 	return payload;
 }

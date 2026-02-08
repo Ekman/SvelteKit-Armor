@@ -28,6 +28,7 @@ export const routeLoginFactory: RouteFactory = (config: ArmorConfig) => {
 				redirect_uri: urlConcat(event.url.origin, ROUTE_PATH_REDIRECT_LOGIN),
 				state,
 				scope,
+				audience: config.oauth.audience,
 			});
 
 			throw redirect(302, `${authorizeEndpoint}?${params}`);

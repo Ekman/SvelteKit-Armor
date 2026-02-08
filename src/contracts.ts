@@ -51,13 +51,15 @@ export interface ArmorConfig {
 		readonly logoutEndpoint?: string;
 		readonly tokenEndpoint?: string;
 		readonly scope?: string;
+		readonly audience?: string;
 	};
 }
 
 export interface ArmorOpenIdConfig extends Pick<ArmorConfig, "session"> {
 	readonly oauth: ArmorCredentials & {
+		readonly openIdConfigEndpoint: string;
 		readonly baseUrl: string;
 		readonly scope?: string;
-		readonly openIdConfigEndpoint: string;
+		readonly audience?: string;
 	};
 }
