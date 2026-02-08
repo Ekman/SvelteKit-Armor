@@ -29,10 +29,25 @@ export interface ArmorTokens {
 	readonly accessToken: ArmorAccessToken;
 }
 
-interface ArmorCredentials {
-	readonly clientId: string;
-	readonly clientSecret: string;
+interface OauthBaseUrl {
+	readonly baseUrl: string;
+
+	readonly jwksEndpoint?: never;
+	readonly authorizeEndpoint?: never;
+	readonly logoutEndpoint?: never;
+	readonly tokenEndpoint?: never;
 }
+
+interface OauthEndpoints {
+	readonly baseUrl?: never;
+
+	readonly jwksEndpoint: string;
+	readonly authorizeEndpoint: string;
+	readonly logoutEndpoint: string;
+	readonly tokenEndpoint: string;
+}
+
+type OauthEndpointsOrBaseUrl = OauthBaseUrl | OauthEndpoints;
 
 export interface ArmorConfig {
 	readonly session?: {
@@ -43,23 +58,20 @@ export interface ArmorConfig {
 		) => Promise<void> | void;
 		readonly logout?: (event: RequestEvent) => Promise<void> | void;
 	};
-	readonly oauth: ArmorCredentials & {
-		readonly baseUrl: string;
-		readonly jwksUrl?: string;
+	readonly oauth: OauthEndpointsOrBaseUrl & {
+		readonly clientId: string;
+		readonly clientSecret: string;
 		readonly issuer: string;
-		readonly authorizeEndpoint?: string;
-		readonly logoutEndpoint?: string;
-		readonly tokenEndpoint?: string;
 		readonly scope?: string;
 		readonly audience?: string;
 	};
 }
 
 export interface ArmorOpenIdConfig extends Pick<ArmorConfig, "session"> {
-	readonly oauth: ArmorCredentials & {
+	readonly oauth: Pick<
+		ArmorConfig["oauth"],
+		"clientId" | "clientSecret" | "scope" | "audience"
+	> & {
 		readonly openIdConfigEndpoint: string;
-		readonly baseUrl: string;
-		readonly scope?: string;
-		readonly audience?: string;
 	};
 }

@@ -4,7 +4,7 @@ import type {
 	ArmorIdToken,
 	ArmorTokenExchange,
 } from "../contracts";
-import { strTrimEnd, throwIfUndefined } from "@nekm/core";
+import { throwIfUndefined } from "@nekm/core";
 import { createRemoteJWKSet } from "jose";
 import type { RouteFactory } from "./routes";
 import { urlConcat, isTokenExchange } from "../utils/utils";
@@ -22,8 +22,8 @@ export const routeRedirectLoginFactory: RouteFactory = (
 	config: ArmorConfig,
 ) => {
 	const jwksUrl = new URL(
-		config.oauth.jwksUrl ??
-			`${strTrimEnd(config.oauth.issuer, "/")}/.well-known/jwks.json`,
+		config.oauth.jwksEndpoint ??
+			urlConcat(config.oauth.baseUrl, ".well-known/jwks.json"),
 	);
 
 	const tokenUrl =
