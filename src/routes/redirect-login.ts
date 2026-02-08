@@ -8,13 +8,9 @@ import { throwIfUndefined } from "@nekm/core";
 import { createRemoteJWKSet } from "jose";
 import type { RouteFactory } from "./routes";
 import { urlConcat, isTokenExchange } from "../utils/utils";
-import {
-	COOKIE_STATE,
-	COOKIE_TOKENS,
-	cookieGetAndDelete,
-	cookieSet,
-} from "../utils/cookie";
+import { COOKIE_TOKENS, cookieSet } from "../utils/cookie";
 import { jwtVerifyAccessToken, jwtVerifyIdToken } from "../utils/jwt";
+import { eventStateValidOrThrow } from "../utils/event";
 
 export const ROUTE_PATH_REDIRECT_LOGIN = "/_armor/redirect/login";
 
@@ -80,12 +76,7 @@ export const routeRedirectLoginFactory: RouteFactory = (
 	return {
 		path: ROUTE_PATH_REDIRECT_LOGIN,
 		async handle({ event }) {
-			const state = event.url.searchParams.get("state") ?? undefined;
-			const stateCookie = cookieGetAndDelete(event.cookies, COOKIE_STATE);
-
-			if (state !== stateCookie) {
-				throw new Error("State do not match");
-			}
+			eventStateValidOrThrow(event);
 
 			const code = event.url.searchParams.get("code") ?? undefined;
 			throwIfUndefined(code);
