@@ -15,8 +15,8 @@ import {
 	cookieSet,
 } from "../utils/cookie";
 import {
-	jwtVerifyAndDecryptAccessToken,
-	jwtVerifyAndDecryptIdToken,
+	jwtVerifyAccessToken,
+	jwtVerifyIdToken,
 } from "../utils/jwt";
 
 export const ROUTE_PATH_REDIRECT_LOGIN = "/_armor/redirect/login";
@@ -44,20 +44,26 @@ export const routeRedirectLoginFactory: RouteFactory = (
 		origin: string,
 		code: string,
 	): Promise<ArmorTokenExchange> {
+		const params: Record<string, string> = {
+			grant_type: "authorization_code",
+			client_id: config.oauth.clientId,
+			client_secret: config.oauth.clientSecret,
+			code,
+			redirect_uri: urlConcat(origin, ROUTE_PATH_REDIRECT_LOGIN),
+			scope,
+		}
+
+		if (config.oauth.audience) {
+			params.audience = config.oauth.audience;
+		}
+
 		const response = await fetch(tokenUrl, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded",
 				Accept: "application/json",
 			},
-			body: new URLSearchParams({
-				grant_type: "authorization_code",
-				client_id: config.oauth.clientId,
-				client_secret: config.oauth.clientSecret,
-				code,
-				redirect_uri: urlConcat(origin, ROUTE_PATH_REDIRECT_LOGIN),
-				scope,
-			}).toString(),
+			body: new URLSearchParams(params),
 		});
 
 		if (!response.ok) {
@@ -96,8 +102,8 @@ export const routeRedirectLoginFactory: RouteFactory = (
 			const jwks = createRemoteJWKSet(jwksUrl);
 
 			const [idToken, accessToken] = await Promise.all([
-				jwtVerifyAndDecryptIdToken(config, jwks, exchange.id_token),
-				jwtVerifyAndDecryptAccessToken(config, jwks, exchange.access_token),
+				jwtVerifyIdToken(config, jwks, exchange.id_token),
+				jwtVerifyAccessToken(config, jwks, exchange.access_token),
 			]);
 
 			await sessionLogin(event, {
