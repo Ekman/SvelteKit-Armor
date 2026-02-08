@@ -63,7 +63,7 @@ export const routeRedirectLoginFactory: RouteFactory = (
 				"Content-Type": "application/x-www-form-urlencoded",
 				Accept: "application/json",
 			},
-			body: new URLSearchParams(params),
+			body: new URLSearchParams(params).toString(),
 		});
 
 		if (!response.ok) {
