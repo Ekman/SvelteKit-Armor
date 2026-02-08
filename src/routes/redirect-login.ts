@@ -26,10 +26,8 @@ export const routeRedirectLoginFactory: RouteFactory = (
 			`${strTrimEnd(config.oauth.issuer, "/")}/.well-known/jwks.json`,
 	);
 
-	const tokenUrl = urlConcat(
-		config.oauth.baseUrl,
-		config.oauth.tokenPath ?? "oauth2/token",
-	);
+	const tokenUrl = config.oauth.tokenEndpoint
+		?? urlConcat(config.oauth.baseUrl, "oauth2/token");
 
 	const sessionLogin =
 		config.session.login ??

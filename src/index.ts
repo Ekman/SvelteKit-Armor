@@ -69,11 +69,11 @@ export async function armorFromOpenIdConfig(
 		...config,
 		oauth: {
 			...config.oauth,
-			tokenPath: body.token_endpoint,
-			authorizePath: body.authorization_endpoint,
+			tokenEndpoint: body.token_endpoint,
+			authorizeEndpoint: body.authorization_endpoint,
 			issuer: body.issuer,
 			jwksUrl: body.jwks_uri,
-			logoutPath: body.end_session_endpoint ?? undefined,
+			logoutEndpoint: body.end_session_endpoint ?? undefined,
 		},
 	});
 }

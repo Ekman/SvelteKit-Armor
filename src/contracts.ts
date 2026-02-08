@@ -47,9 +47,9 @@ export interface ArmorConfig {
 		readonly baseUrl: string;
 		readonly jwksUrl?: string;
 		readonly issuer: string;
-		readonly authorizePath?: string;
-		readonly logoutPath?: string;
-		readonly tokenPath?: string;
+		readonly authorizeEndpoint?: string;
+		readonly logoutEndpoint?: string;
+		readonly tokenEndpoint?: string;
 	};
 }
 

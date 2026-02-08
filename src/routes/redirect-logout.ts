@@ -9,7 +9,7 @@ export const routeRedirectLogoutFactory: RouteFactory = (
 	config: ArmorConfig,
 ) => {
 	// Check if the oauth provider supports a logout path.
-	if (!config.oauth.logoutPath) {
+	if (!config.oauth.logoutEndpoint) {
 		return undefined;
 	}
 
