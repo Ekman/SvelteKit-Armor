@@ -16,7 +16,7 @@ import {
 } from "../utils/cookie";
 import { jwtVerifyAccessToken, jwtVerifyIdToken } from "../utils/jwt";
 
-export const ROUTE_PATH_REDIRECT_LOGIN = "/_auth/redirect/login";
+export const ROUTE_PATH_REDIRECT_LOGIN = "/_armor/redirect/login";
 
 export const routeRedirectLoginFactory: RouteFactory = (
 	config: ArmorConfig,
@@ -25,7 +25,11 @@ export const routeRedirectLoginFactory: RouteFactory = (
 		config.oauth.jwksUrl ??
 			`${strTrimEnd(config.oauth.issuer, "/")}/.well-known/jwks.json`,
 	);
-	const tokenUrl = `${config.oauth.baseUrl}/${config.oauth.tokenPath ?? "oauth2/token"}`;
+
+	const tokenUrl = urlConcat(
+		config.oauth.baseUrl,
+		config.oauth.tokenPath ?? "oauth2/token",
+	);
 
 	const sessionLogin =
 		config.session.login ??

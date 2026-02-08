@@ -35,10 +35,10 @@ Done. Entire app now requires login.
 
 Your app will now expose these routes:
 
-* `/_auth/login` - Redirect the user here to initiate a login.
-* `/_auth/redirect/login` - Configure your IdP to redirect here.
-* `/_auth/logout` - Only if logout endpoint is configured.
-* `/_auth/redirect/logout` - Only if logout endpoint is configured.
+* `/_armor/login` - Redirect the user here to initiate a login.
+* `/_armor/redirect/login` - Configure your IdP to redirect here.
+* `/_armor/logout` - Only if logout endpoint is configured.
+* `/_armor/redirect/logout` - Only if logout endpoint is configured.
 
 ## Examples
 

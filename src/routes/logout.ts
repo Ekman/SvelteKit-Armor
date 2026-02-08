@@ -5,7 +5,7 @@ import { ROUTE_PATH_REDIRECT_LOGOUT } from "./redirect-logout";
 import type { RouteFactory } from "./routes";
 import { urlConcat } from "../utils/utils";
 
-export const ROUTE_PATH_LOGOUT = "/_auth/logout";
+export const ROUTE_PATH_LOGOUT = "/_armor/logout";
 
 export const routeLogoutFactory: RouteFactory = (config: ArmorConfig) => {
 	// Check if the oauth provider supports a logout path.
@@ -13,7 +13,7 @@ export const routeLogoutFactory: RouteFactory = (config: ArmorConfig) => {
 		return undefined;
 	}
 
-	const logoutUrl = `${config.oauth.baseUrl}/${config.oauth.logoutPath}`;
+	const logoutUrl = urlConcat(config.oauth.baseUrl, config.oauth.logoutPath);
 
 	return {
 		path: ROUTE_PATH_LOGOUT,
