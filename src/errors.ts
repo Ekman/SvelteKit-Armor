@@ -1,3 +1,3 @@
 export class ArmorError extends Error {}
-export class ArmorOpenIdConfigError extends Error {}
-export class ArmorInvalidStateError extends Error {}
+export class ArmorOpenIdConfigError extends ArmorError {}
+export class ArmorInvalidStateError extends ArmorError {}
