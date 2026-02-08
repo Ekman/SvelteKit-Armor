@@ -46,7 +46,7 @@ export function armor(config: ArmorConfig): Handle {
  */
 export async function armorFromOpenIdConfig(
 	config: ArmorOpenIdConfig,
-	fetch: typeof global.fetch,
+	fetch?: typeof global.fetch,
 ) {
 	const url =
 		config.oauth.openIdConfigUrl ??
