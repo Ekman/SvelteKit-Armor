@@ -34,6 +34,8 @@ export const routeRedirectLoginFactory: RouteFactory = (
 		config.session?.login ??
 		((event, tokens) => cookieSet(event.cookies, COOKIE_TOKENS, tokens));
 
+	const scope = config.oauth.scope ?? "openid profile email";
+
 	async function exchangeCodeForToken(
 		fetch: typeof global.fetch,
 		origin: string,
@@ -51,6 +53,7 @@ export const routeRedirectLoginFactory: RouteFactory = (
 				client_secret: config.oauth.clientSecret,
 				code,
 				redirect_uri: urlConcat(origin, ROUTE_PATH_REDIRECT_LOGIN),
+				scope,
 			}).toString(),
 		});
 
