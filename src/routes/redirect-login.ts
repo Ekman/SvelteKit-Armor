@@ -82,7 +82,7 @@ export const routeRedirectLoginFactory: RouteFactory = (
 			throwIfUndefined(code);
 
 			const exchange = await exchangeCodeForToken(
-				fetch,
+				event.fetch,
 				event.url.origin,
 				code,
 			);
