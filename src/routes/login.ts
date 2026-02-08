@@ -14,6 +14,8 @@ export const routeLoginFactory: RouteFactory = (config: ArmorConfig) => {
 		config.oauth.authorizeEndpoint ??
 		urlConcat(config.oauth.baseUrl, "oauth2/authorize");
 
+	const scope = config.oauth.scope ?? "openid profile email";
+
 	return {
 		path: ROUTE_PATH_LOGIN,
 		async handle({ event }) {
@@ -25,6 +27,7 @@ export const routeLoginFactory: RouteFactory = (config: ArmorConfig) => {
 				response_type: "code",
 				redirect_uri: urlConcat(event.url.origin, ROUTE_PATH_REDIRECT_LOGIN),
 				state,
+				scope,
 			});
 
 			throw redirect(302, `${authorizeEndpoint}?${params}`);
