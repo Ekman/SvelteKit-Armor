@@ -1,5 +1,11 @@
 import { ArmorConfig } from "../contracts";
-import {jwtDecrypt, JWTPayload, jwtVerify, JWTVerifyGetKey, JWTVerifyOptions} from "jose";
+import {
+	jwtDecrypt,
+	JWTPayload,
+	jwtVerify,
+	JWTVerifyGetKey,
+	JWTVerifyOptions,
+} from "jose";
 
 export function jwtVerifyAndDecryptIdToken(
 	config: ArmorConfig,
@@ -22,7 +28,12 @@ export function jwtVerifyAndDecryptAccessToken(
 	jwks: JWTVerifyGetKey,
 	accessToken: string,
 ): Promise<JWTPayload> {
-	return jwtVerifyAndDecryptToken(config, jwks, { issuer: config.oauth.issuer }, accessToken);
+	return jwtVerifyAndDecryptToken(
+		config,
+		jwks,
+		{ issuer: config.oauth.issuer },
+		accessToken,
+	);
 }
 
 function jwtIsEncryptedToken(token: string): boolean {

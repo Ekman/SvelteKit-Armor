@@ -14,7 +14,10 @@ import {
 	cookieGetAndDelete,
 	cookieSet,
 } from "../utils/cookie";
-import { jwtVerifyAndDecryptAccessToken, jwtVerifyAndDecryptIdToken } from "../utils/jwt";
+import {
+	jwtVerifyAndDecryptAccessToken,
+	jwtVerifyAndDecryptIdToken,
+} from "../utils/jwt";
 
 export const ROUTE_PATH_REDIRECT_LOGIN = "/_armor/redirect/login";
 
