@@ -29,6 +29,11 @@ export interface ArmorTokens {
 	readonly accessToken: ArmorAccessToken;
 }
 
+interface ArmorCredentials {
+	readonly clientId: string;
+	readonly clientSecret: string;
+}
+
 export interface ArmorConfig {
 	readonly session: {
 		readonly exists?: (event: RequestEvent) => Promise<boolean> | boolean;
@@ -38,9 +43,7 @@ export interface ArmorConfig {
 		) => Promise<void> | void;
 		readonly logout?: (event: RequestEvent) => Promise<void> | void;
 	};
-	readonly oauth: {
-		readonly clientId: string;
-		readonly clientSecret: string;
+	readonly oauth: ArmorCredentials & {
 		readonly baseUrl: string;
 		readonly jwksUrl?: string;
 		readonly issuer: string;
@@ -48,4 +51,11 @@ export interface ArmorConfig {
 		readonly logoutPath?: string;
 		readonly tokenPath?: string;
 	};
+}
+
+export interface ArmorOpenIdConfig extends Pick<ArmorConfig, 'session'> {
+	readonly oauth: ArmorCredentials & {
+		readonly openIdConfigUrl?: string;
+		readonly baseUrl: string;
+	}
 }
