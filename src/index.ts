@@ -41,18 +41,20 @@ export function armor(config: ArmorConfig): Handle {
 /**
  * Some IdP's expose a /.well-known/openid-configuiration that specifies how to configure.
  * Use that to autoconfigure your instance.
- * @param fetch
  * @param config
+ * @param fetch
  */
 export async function armorFromOpenIdConfig(
-	fetch: typeof global.fetch,
 	config: ArmorOpenIdConfig,
+	fetch: typeof global.fetch,
 ) {
 	const url =
 		config.oauth.openIdConfigUrl ??
 		`${config.oauth.baseUrl}/.well-known/openid-configuration`;
 
-	const response = await fetch(url, {
+	const fetchToUse = fetch ?? global.fetch;
+
+	const response = await fetchToUse(url, {
 		headers: {
 			Accept: "application/json",
 		},
