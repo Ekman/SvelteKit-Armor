@@ -4,7 +4,7 @@ import type {
 	ArmorIdToken,
 	ArmorTokenExchange,
 } from "../contracts";
-import { strTrimEnd, throwIfUndefined } from "@nekm/core";
+import { throwIfUndefined } from "@nekm/core";
 import { createRemoteJWKSet } from "jose";
 import type { RouteFactory } from "./routes";
 import { urlConcat, isTokenExchange } from "../utils/utils";
