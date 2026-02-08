@@ -39,22 +39,18 @@ export function armor(config: ArmorConfig): Handle {
 }
 
 /**
- * Some IdP's expose a /.well-known/openid-configuiration that specifies how to configure.
- * Use that to autoconfigure your instance.
+ * Some IdP's expose a /.well-known/openid-configuration that specifies how to configure.
+ * Use that to create your config.
  * @param config
  * @param fetch
  */
-export async function armorFromOpenIdConfig(
+export async function armorConfigFromOpenId(
 	config: ArmorOpenIdConfig,
 	fetch?: typeof global.fetch,
-) {
-	const url =
-		config.oauth.openIdConfigUrl ??
-		`${config.oauth.baseUrl}/.well-known/openid-configuration`;
-
+): Promise<ArmorConfig> {
 	const fetchToUse = fetch ?? global.fetch;
 
-	const response = await fetchToUse(url, {
+	const response = await fetchToUse(config.oauth.openIdConfigEndpoint, {
 		headers: {
 			Accept: "application/json",
 		},
@@ -67,7 +63,7 @@ export async function armorFromOpenIdConfig(
 
 	const body = await response.json();
 
-	return armor({
+	return {
 		...config,
 		oauth: {
 			...config.oauth,
@@ -77,7 +73,7 @@ export async function armorFromOpenIdConfig(
 			jwksUrl: body.jwks_uri,
 			logoutEndpoint: body.end_session_endpoint ?? undefined,
 		},
-	});
+	};
 }
 
 export function armorCookiesGetTokens(cookies: Cookies): ArmorTokens {
