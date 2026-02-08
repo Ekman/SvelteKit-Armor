@@ -2,6 +2,7 @@ import { redirect } from "@sveltejs/kit";
 import type { ArmorConfig } from "../contracts";
 import { noop } from "@nekm/core";
 import type { RouteFactory } from "./routes";
+import {eventStateValidOrThrow} from "../utils/event";
 
 export const ROUTE_PATH_REDIRECT_LOGOUT = "/_armor/redirect/logout";
 
@@ -18,7 +19,10 @@ export const routeRedirectLogoutFactory: RouteFactory = (
 	return {
 		path: ROUTE_PATH_REDIRECT_LOGOUT,
 		async handle({ event }) {
+			eventStateValidOrThrow(event);
+
 			await logout(event);
+
 			throw redirect(302, "/");
 		},
 	};
