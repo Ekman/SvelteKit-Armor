@@ -1,6 +1,5 @@
 import { ArmorConfig } from "../contracts";
 import {
-	jwtDecrypt,
 	JWTPayload,
 	jwtVerify,
 	JWTVerifyGetKey,
