@@ -23,7 +23,7 @@ export const routeRedirectLoginFactory: RouteFactory = (
 ) => {
 	const jwksUrl = new URL(
 		config.oauth.jwksEndpoint ??
-			urlConcat(config.oauth.baseUrl, '.well-known/jwks.json'),
+			urlConcat(config.oauth.baseUrl, ".well-known/jwks.json"),
 	);
 
 	const tokenUrl =

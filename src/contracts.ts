@@ -68,7 +68,10 @@ export interface ArmorConfig {
 }
 
 export interface ArmorOpenIdConfig extends Pick<ArmorConfig, "session"> {
-	readonly oauth: Pick<ArmorConfig['oauth'], 'clientId' | 'clientSecret' | 'scope' | 'audience'> & {
+	readonly oauth: Pick<
+		ArmorConfig["oauth"],
+		"clientId" | "clientSecret" | "scope" | "audience"
+	> & {
 		readonly openIdConfigEndpoint: string;
 	};
 }
