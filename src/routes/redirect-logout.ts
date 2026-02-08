@@ -13,7 +13,7 @@ export const routeRedirectLogoutFactory: RouteFactory = (
 		return undefined;
 	}
 
-	const logout = config.session.logout ?? noop;
+	const logout = config.session?.logout ?? noop;
 
 	return {
 		path: ROUTE_PATH_REDIRECT_LOGOUT,

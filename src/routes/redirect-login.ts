@@ -31,7 +31,7 @@ export const routeRedirectLoginFactory: RouteFactory = (
 		urlConcat(config.oauth.baseUrl, "oauth2/token");
 
 	const sessionLogin =
-		config.session.login ??
+		config.session?.login ??
 		((event, tokens) => cookieSet(event.cookies, COOKIE_TOKENS, tokens));
 
 	async function exchangeCodeForToken(

@@ -15,7 +15,7 @@ export const ARMOR_LOGOUT = ROUTE_PATH_LOGOUT;
 export function armor(config: ArmorConfig): Handle {
 	const routes = routeCreate(config);
 	const sessionExists =
-		config.session.exists ??
+		config.session?.exists ??
 		((event) => Boolean(event.cookies.get(COOKIE_TOKENS)));
 
 	return async ({ event, resolve }) => {
