@@ -15,7 +15,7 @@ export const ARMOR_LOGOUT = ROUTE_PATH_LOGOUT;
 export function armor(config: ArmorConfig): Handle {
 	const routes = routeCreate(config);
 	const sessionExists =
-		config.session.exists ??
+		config.session?.exists ??
 		((event) => Boolean(event.cookies.get(COOKIE_TOKENS)));
 
 	return async ({ event, resolve }) => {
@@ -41,18 +41,20 @@ export function armor(config: ArmorConfig): Handle {
 /**
  * Some IdP's expose a /.well-known/openid-configuiration that specifies how to configure.
  * Use that to autoconfigure your instance.
- * @param fetch
  * @param config
+ * @param fetch
  */
 export async function armorFromOpenIdConfig(
-	fetch: typeof global.fetch,
 	config: ArmorOpenIdConfig,
+	fetch?: typeof global.fetch,
 ) {
 	const url =
 		config.oauth.openIdConfigUrl ??
 		`${config.oauth.baseUrl}/.well-known/openid-configuration`;
 
-	const response = await fetch(url, {
+	const fetchToUse = fetch ?? global.fetch;
+
+	const response = await fetchToUse(url, {
 		headers: {
 			Accept: "application/json",
 		},
@@ -69,11 +71,11 @@ export async function armorFromOpenIdConfig(
 		...config,
 		oauth: {
 			...config.oauth,
-			tokenPath: body.token_endpoint,
-			authorizePath: body.authorization_endpoint,
+			tokenEndpoint: body.token_endpoint,
+			authorizeEndpoint: body.authorization_endpoint,
 			issuer: body.issuer,
 			jwksUrl: body.jwks_uri,
-			logoutPath: body.end_session_endpoint ?? undefined,
+			logoutEndpoint: body.end_session_endpoint ?? undefined,
 		},
 	});
 }

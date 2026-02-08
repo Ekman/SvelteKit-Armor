@@ -9,11 +9,9 @@ export const ROUTE_PATH_LOGOUT = "/_armor/logout";
 
 export const routeLogoutFactory: RouteFactory = (config: ArmorConfig) => {
 	// Check if the oauth provider supports a logout path.
-	if (!config.oauth.logoutPath) {
+	if (!config.oauth.logoutEndpoint) {
 		return undefined;
 	}
-
-	const logoutUrl = urlConcat(config.oauth.baseUrl, config.oauth.logoutPath);
 
 	return {
 		path: ROUTE_PATH_LOGOUT,
@@ -23,7 +21,7 @@ export const routeLogoutFactory: RouteFactory = (config: ArmorConfig) => {
 				client_id: config.oauth.clientId,
 			});
 
-			throw redirect(302, `${logoutUrl}?${params}`);
+			throw redirect(302, `${config.oauth.logoutEndpoint}?${params}`);
 		},
 	};
 };

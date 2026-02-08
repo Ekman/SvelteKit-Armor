@@ -35,7 +35,7 @@ interface ArmorCredentials {
 }
 
 export interface ArmorConfig {
-	readonly session: {
+	readonly session?: {
 		readonly exists?: (event: RequestEvent) => Promise<boolean> | boolean;
 		readonly login?: (
 			event: RequestEvent,
@@ -47,9 +47,9 @@ export interface ArmorConfig {
 		readonly baseUrl: string;
 		readonly jwksUrl?: string;
 		readonly issuer: string;
-		readonly authorizePath?: string;
-		readonly logoutPath?: string;
-		readonly tokenPath?: string;
+		readonly authorizeEndpoint?: string;
+		readonly logoutEndpoint?: string;
+		readonly tokenEndpoint?: string;
 	};
 }
 
