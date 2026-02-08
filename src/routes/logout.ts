@@ -4,8 +4,8 @@ import { queryParamsCreate } from "@nekm/core";
 import { ROUTE_PATH_REDIRECT_LOGOUT } from "./redirect-logout";
 import type { RouteFactory } from "./routes";
 import { urlConcat } from "../utils/utils";
-import {randomUUID} from "node:crypto";
-import {COOKIE_STATE, cookieSet} from "../utils/cookie";
+import { randomUUID } from "node:crypto";
+import { COOKIE_STATE, cookieSet } from "../utils/cookie";
 
 export const ROUTE_PATH_LOGOUT = "/_armor/logout";
 

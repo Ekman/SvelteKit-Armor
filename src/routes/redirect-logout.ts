@@ -2,7 +2,7 @@ import { redirect } from "@sveltejs/kit";
 import type { ArmorConfig } from "../contracts";
 import { noop } from "@nekm/core";
 import type { RouteFactory } from "./routes";
-import {eventStateValidOrThrow} from "../utils/event";
+import { eventStateValidOrThrow } from "../utils/event";
 
 export const ROUTE_PATH_REDIRECT_LOGOUT = "/_armor/redirect/logout";
 

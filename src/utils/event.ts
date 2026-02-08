@@ -1,6 +1,6 @@
-import {RequestEvent} from "@sveltejs/kit";
-import {COOKIE_STATE, cookieGetAndDelete} from "./cookie";
-import {ArmorInvalidStateError} from "../errors";
+import { RequestEvent } from "@sveltejs/kit";
+import { COOKIE_STATE, cookieGetAndDelete } from "./cookie";
+import { ArmorInvalidStateError } from "../errors";
 
 export function eventStateValidOrThrow(event: RequestEvent): void {
 	const state = event.url.searchParams.get("state") ?? undefined;
