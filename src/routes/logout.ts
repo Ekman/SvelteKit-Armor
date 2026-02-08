@@ -13,7 +13,7 @@ export const routeLogoutFactory: RouteFactory = (config: ArmorConfig) => {
 		return undefined;
 	}
 
-	const logoutUrl = `${config.oauth.baseUrl}/${config.oauth.logoutPath}`;
+	const logoutUrl = urlConcat(config.oauth.baseUrl, config.oauth.logoutPath);
 
 	return {
 		path: ROUTE_PATH_LOGOUT,
