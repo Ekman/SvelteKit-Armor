@@ -53,9 +53,9 @@ export interface ArmorConfig {
 	};
 }
 
-export interface ArmorOpenIdConfig extends Pick<ArmorConfig, 'session'> {
+export interface ArmorOpenIdConfig extends Pick<ArmorConfig, "session"> {
 	readonly oauth: ArmorCredentials & {
 		readonly openIdConfigUrl?: string;
 		readonly baseUrl: string;
-	}
+	};
 }

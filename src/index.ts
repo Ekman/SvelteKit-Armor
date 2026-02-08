@@ -1,11 +1,11 @@
 import { error, redirect, type Handle, Cookies } from "@sveltejs/kit";
 import { ROUTE_PATH_LOGIN } from "./routes/login";
-import type {ArmorConfig, ArmorOpenIdConfig, ArmorTokens} from "./contracts";
+import type { ArmorConfig, ArmorOpenIdConfig, ArmorTokens } from "./contracts";
 import { ROUTE_PATH_LOGOUT } from "./routes/logout";
 import { routeCreate } from "./routes/routes";
 import { COOKIE_TOKENS, cookieGet } from "./utils/cookie";
 import { throwIfUndefined } from "@nekm/core";
-import {ArmorOpenIdConfigError} from "./errors";
+import { ArmorOpenIdConfigError } from "./errors";
 
 export type { ArmorConfig, ArmorTokens };
 
@@ -48,16 +48,15 @@ export async function armorFromOpenIdConfig(
 	fetch: typeof global.fetch,
 	config: ArmorOpenIdConfig,
 ) {
-	const url = config.oauth.openIdConfigUrl ?? `${config.oauth.baseUrl}/.well-known/openid-configuration`;
+	const url =
+		config.oauth.openIdConfigUrl ??
+		`${config.oauth.baseUrl}/.well-known/openid-configuration`;
 
-	const response = await fetch(
-		url,
-		{
-			headers: {
-				Accept: "application/json",
-			}
-		}
-	)
+	const response = await fetch(url, {
+		headers: {
+			Accept: "application/json",
+		},
+	});
 
 	if (!response.ok) {
 		const text = await response.text();
@@ -71,12 +70,12 @@ export async function armorFromOpenIdConfig(
 		oauth: {
 			...config.oauth,
 			tokenPath: body.token_endpoint,
-		 	authorizePath: body.authorization_endpoint,
+			authorizePath: body.authorization_endpoint,
 			issuer: body.issuer,
 			jwksUrl: body.jwks_uri,
 			logoutPath: body.end_session_endpoint ?? undefined,
-		}
-	})
+		},
+	});
 }
 
 export function armorCookiesGetTokens(cookies: Cookies): ArmorTokens {
