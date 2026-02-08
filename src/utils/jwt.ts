@@ -1,10 +1,5 @@
 import { ArmorConfig } from "../contracts";
-import {
-	JWTPayload,
-	jwtVerify,
-	JWTVerifyGetKey,
-	JWTVerifyOptions,
-} from "jose";
+import { JWTPayload, jwtVerify, JWTVerifyGetKey, JWTVerifyOptions } from "jose";
 
 export function jwtVerifyIdToken(
 	config: ArmorConfig,
@@ -33,12 +28,7 @@ export function jwtVerifyAccessToken(
 		opts.audience = config.oauth.audience;
 	}
 
-	return jwtVerifyToken(
-		config,
-		jwks,
-		opts,
-		accessToken,
-	);
+	return jwtVerifyToken(config, jwks, opts, accessToken);
 }
 
 async function jwtVerifyToken(

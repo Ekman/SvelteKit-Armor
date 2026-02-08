@@ -14,10 +14,7 @@ import {
 	cookieGetAndDelete,
 	cookieSet,
 } from "../utils/cookie";
-import {
-	jwtVerifyAccessToken,
-	jwtVerifyIdToken,
-} from "../utils/jwt";
+import { jwtVerifyAccessToken, jwtVerifyIdToken } from "../utils/jwt";
 
 export const ROUTE_PATH_REDIRECT_LOGIN = "/_armor/redirect/login";
 
@@ -51,7 +48,7 @@ export const routeRedirectLoginFactory: RouteFactory = (
 			code,
 			redirect_uri: urlConcat(origin, ROUTE_PATH_REDIRECT_LOGIN),
 			scope,
-		}
+		};
 
 		if (config.oauth.audience) {
 			params.audience = config.oauth.audience;
