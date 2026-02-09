@@ -1,22 +1,18 @@
-import { error, redirect, type Handle, Cookies } from "@sveltejs/kit";
+import { error, redirect, type Handle } from "@sveltejs/kit";
 import { ROUTE_PATH_LOGIN } from "./routes/login";
 import type { ArmorConfig, ArmorOpenIdConfig, ArmorTokens } from "./contracts";
 import { ROUTE_PATH_LOGOUT } from "./routes/logout";
 import { routeCreate } from "./routes/routes";
-import { COOKIE_TOKENS, cookieGet } from "./utils/cookie";
-import { throwIfUndefined } from "@nekm/core";
 import { ArmorOpenIdConfigError } from "./errors";
 
 export type { ArmorConfig, ArmorTokens };
+export { armorCookieSession, armorCookieSessionGet } from "./session/cookie";
 
 export const ARMOR_LOGIN = ROUTE_PATH_LOGIN;
 export const ARMOR_LOGOUT = ROUTE_PATH_LOGOUT;
 
 export function armor(config: ArmorConfig): Handle {
 	const routes = routeCreate(config);
-	const sessionExists =
-		config.session?.exists ??
-		((event) => Boolean(event.cookies.get(COOKIE_TOKENS)));
 
 	return async ({ event, resolve }) => {
 		const routeHandle = routes.get(event.url.pathname);
@@ -28,7 +24,7 @@ export function armor(config: ArmorConfig): Handle {
 			throw error(500, "Illegal state");
 		}
 
-		const exists = await sessionExists(event);
+		const exists = await config.session.exists(event);
 
 		if (!exists) {
 			throw redirect(302, ROUTE_PATH_LOGIN);
@@ -74,10 +70,4 @@ export async function armorConfigFromOpenId(
 			logoutEndpoint: body.end_session_endpoint ?? undefined,
 		},
 	};
-}
-
-export function armorCookiesGetTokens(cookies: Cookies): ArmorTokens {
-	const tokens = cookieGet<ArmorTokens>(cookies, COOKIE_TOKENS);
-	throwIfUndefined(tokens);
-	return tokens;
 }

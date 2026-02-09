@@ -39,3 +39,7 @@ export function cookieGet<T>(cookies: Cookies, key: string): T | undefined {
 
 	return !value ? undefined : JSON.parse(value);
 }
+
+export function cookieDelete(cookies: Cookies, key: string): void {
+	cookies.delete(key, cookieDeleteOptions);
+}

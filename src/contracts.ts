@@ -50,7 +50,7 @@ interface OauthEndpoints {
 type OauthEndpointsOrBaseUrl = OauthBaseUrl | OauthEndpoints;
 
 export interface ArmorConfig {
-	readonly session?: {
+	readonly session: {
 		readonly exists: (event: RequestEvent) => Promise<boolean> | boolean;
 		readonly login: (
 			event: RequestEvent,
