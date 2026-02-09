@@ -17,19 +17,30 @@ npm install --save @nekm/sveltekit-armor @sveltejs/kit
 Create a `src/hooks.server.ts` and write:
 
 ```js
-import { armor } from '@nekm/sveltekit-armor';
+import { armor, armorCookieSession } from '@nekm/sveltekit-armor';
 
 export const handle = armor({
-		oauth: {
-      clientId: 'foo',
-      clientSecret: 'bar',
-      baseUrl: 'https://myapp.auth.eu-west-1.amazoncognito.com',
-      issuer: 'https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_ABC123xyz',
-    }
+	oauth: {
+		clientId: 'foo',
+		clientSecret: 'bar',
+		baseUrl: 'https://myapp.auth.eu-west-1.amazoncognito.com',
+		issuer: 'https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_ABC123xyz',
+	},
+	session: armorCookieSession,
 });
 ```
 
 Done. Entire app now requires login.
+
+Access the tokens:
+
+```js
+import {armorCookieSessionGet} from "./cookie";
+
+const tokens = armorCookieSessionGet(event.cookies);
+```
+
+For simplicity, we provide you with a default cookie session, but it is recommended to write your own session storage to store tokens in your database.
 
 ## Routes
 

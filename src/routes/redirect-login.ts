@@ -11,6 +11,7 @@ import { urlConcat, isTokenExchange } from "../utils/utils";
 import { COOKIE_TOKENS, cookieSet } from "../utils/cookie";
 import { jwtVerifyAccessToken, jwtVerifyIdToken } from "../utils/jwt";
 import { eventStateValidOrThrow } from "../utils/event";
+import {armorCookieSessionLogin} from "../session/cookie";
 
 export const ROUTE_PATH_REDIRECT_LOGIN = "/_armor/redirect/login";
 
@@ -25,10 +26,6 @@ export const routeRedirectLoginFactory: RouteFactory = (
 	const tokenUrl =
 		config.oauth.tokenEndpoint ??
 		urlConcat(config.oauth.baseUrl, "oauth2/token");
-
-	const sessionLogin =
-		config.session?.login ??
-		((event, tokens) => cookieSet(event.cookies, COOKIE_TOKENS, tokens));
 
 	const scope = config.oauth.scope ?? "openid profile email";
 
@@ -94,7 +91,7 @@ export const routeRedirectLoginFactory: RouteFactory = (
 				jwtVerifyAccessToken(config, jwks, exchange.access_token),
 			]);
 
-			await sessionLogin(event, {
+			await config.session.login(event, {
 				exchange,
 				idToken: idToken as ArmorIdToken,
 				accessToken,
