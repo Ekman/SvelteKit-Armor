@@ -8,18 +8,18 @@ import {
 import { ArmorConfig, ArmorTokens } from "../contracts";
 import { ArmorAuthMissingError } from "../errors";
 
-export function armorCookieSessionExists({ cookies }: RequestEvent): boolean {
+function cookieSessionExists({ cookies }: RequestEvent): boolean {
 	return Boolean(cookies.get(COOKIE_TOKENS));
 }
 
-export function armorCookieSessionLogin(
+export function cookieSessionLogin(
 	{ cookies }: RequestEvent,
 	tokens: ArmorTokens,
 ): void {
 	cookieSet(cookies, COOKIE_TOKENS, tokens);
 }
 
-export function armorCookieSessionLogout({ cookies }: RequestEvent): void {
+function cookieSessionLogout({ cookies }: RequestEvent): void {
 	cookieDelete(cookies, COOKIE_TOKENS);
 }
 
@@ -34,7 +34,7 @@ export function armorCookieSessionGet({ cookies }: RequestEvent): ArmorTokens {
 }
 
 export const armorCookieSession: ArmorConfig["session"] = {
-	exists: armorCookieSessionExists,
-	login: armorCookieSessionLogin,
-	logout: armorCookieSessionLogout,
+	exists: cookieSessionExists,
+	login: cookieSessionLogin,
+	logout: cookieSessionLogout,
 };
