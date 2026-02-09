@@ -35,7 +35,7 @@ Done. Entire app now requires login.
 Access the tokens:
 
 ```js
-import {armorCookieSessionGet} from "@nekm/sveltekit-armor";
+import {armorCookieSessionGet} from '@nekm/sveltekit-armor';
 
 const tokens = armorCookieSessionGet(event.cookies);
 ```
