@@ -1,4 +1,4 @@
-import { error, redirect, type Handle, Cookies } from "@sveltejs/kit";
+import { error, redirect, type Handle } from "@sveltejs/kit";
 import { ROUTE_PATH_LOGIN } from "./routes/login";
 import type { ArmorConfig, ArmorOpenIdConfig, ArmorTokens } from "./contracts";
 import { ROUTE_PATH_LOGOUT } from "./routes/logout";

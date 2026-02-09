@@ -8,10 +8,8 @@ import { throwIfUndefined } from "@nekm/core";
 import { createRemoteJWKSet } from "jose";
 import type { RouteFactory } from "./routes";
 import { urlConcat, isTokenExchange } from "../utils/utils";
-import { COOKIE_TOKENS, cookieSet } from "../utils/cookie";
 import { jwtVerifyAccessToken, jwtVerifyIdToken } from "../utils/jwt";
 import { eventStateValidOrThrow } from "../utils/event";
-import {armorCookieSessionLogin} from "../session/cookie";
 
 export const ROUTE_PATH_REDIRECT_LOGIN = "/_armor/redirect/login";
 
