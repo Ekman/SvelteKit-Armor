@@ -45,7 +45,6 @@ interface OauthEndpoints {
 	readonly authorizeEndpoint: string;
 	readonly logoutEndpoint?: string;
 	readonly tokenEndpoint: string;
-	readonly logoutReturnToParam?: string;
 }
 
 type OauthEndpointsOrBaseUrl = OauthBaseUrl | OauthEndpoints;
@@ -65,6 +64,23 @@ export interface ArmorConfig {
 		readonly issuer: string;
 		readonly scope?: string;
 		readonly audience?: string;
+		/**
+		 * When redirecting a user to the oauth logout flow,
+		 * what should we name the return to parameter? I.e.
+		 * the parameter that decides where to redirect the
+		 * user back.
+		 * @default {string} logout_uri
+		 */
+		readonly logoutReturnToParam?: string;
+		/**
+		 * If an error occurs, where should we redirect the
+		 * user? Should be an internal path. There'll be more
+		 * information as query parameters:
+		 * 1. error
+		 * 2. error_description
+		 * @default {undefined} Armor will throw an error
+		 */
+		readonly errorLoginRedirectPath?: string;
 	};
 }
 

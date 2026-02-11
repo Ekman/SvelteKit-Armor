@@ -18,10 +18,7 @@ export function armor(config: ArmorConfig): Handle {
 		const routeHandle = routes.get(event.url.pathname);
 
 		if (routeHandle) {
-			await routeHandle({ event, resolve });
-
-			// Handle should redirect. If it doesn't, something is wrong.
-			throw error(500, "Illegal state");
+			return routeHandle({ event, resolve });
 		}
 
 		const exists = await config.session.exists(event);
