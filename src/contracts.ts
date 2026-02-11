@@ -43,8 +43,9 @@ interface OauthEndpoints {
 
 	readonly jwksEndpoint: string;
 	readonly authorizeEndpoint: string;
-	readonly logoutEndpoint: string;
+	readonly logoutEndpoint?: string;
 	readonly tokenEndpoint: string;
+	readonly logoutReturnToParam?: string,
 }
 
 type OauthEndpointsOrBaseUrl = OauthBaseUrl | OauthEndpoints;
