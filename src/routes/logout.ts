@@ -15,6 +15,8 @@ export const routeLogoutFactory: RouteFactory = (config: ArmorConfig) => {
 		return undefined;
 	}
 
+	const returnTo = config.oauth.logoutReturnToParam ?? "logout_uri";
+
 	return {
 		path: ROUTE_PATH_LOGOUT,
 		async handle({ event }) {
@@ -22,7 +24,7 @@ export const routeLogoutFactory: RouteFactory = (config: ArmorConfig) => {
 			cookieSet(event.cookies, COOKIE_STATE, state);
 
 			const params = queryParamsCreate({
-				logout_uri: urlConcat(event.url.origin, ROUTE_PATH_REDIRECT_LOGOUT),
+				[returnTo]: urlConcat(event.url.origin, ROUTE_PATH_REDIRECT_LOGOUT),
 				client_id: config.oauth.clientId,
 				state,
 			});
