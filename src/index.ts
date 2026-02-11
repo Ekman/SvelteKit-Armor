@@ -1,4 +1,4 @@
-import { error, redirect, type Handle } from "@sveltejs/kit";
+import { redirect, type Handle } from "@sveltejs/kit";
 import { ROUTE_PATH_LOGIN } from "./routes/login";
 import type { ArmorConfig, ArmorOpenIdConfig, ArmorTokens } from "./contracts";
 import { ROUTE_PATH_LOGOUT } from "./routes/logout";
@@ -18,10 +18,7 @@ export function armor(config: ArmorConfig): Handle {
 		const routeHandle = routes.get(event.url.pathname);
 
 		if (routeHandle) {
-			await routeHandle({ event, resolve });
-
-			// Handle should redirect. If it doesn't, something is wrong.
-			throw error(500, "Illegal state");
+			return routeHandle({ event, resolve });
 		}
 
 		const exists = await config.session.exists(event);

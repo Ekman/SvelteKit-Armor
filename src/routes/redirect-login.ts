@@ -4,7 +4,7 @@ import type {
 	ArmorIdToken,
 	ArmorTokenExchange,
 } from "../contracts";
-import { throwIfUndefined } from "@nekm/core";
+import { queryParamsCreate, throwIfUndefined } from "@nekm/core";
 import { createRemoteJWKSet } from "jose";
 import type { RouteFactory } from "./routes";
 import { urlConcat, isTokenExchange } from "../utils/utils";
@@ -72,6 +72,27 @@ export const routeRedirectLoginFactory: RouteFactory = (
 		path: ROUTE_PATH_REDIRECT_LOGIN,
 		async handle({ event }) {
 			eventStateValidOrThrow(event);
+
+			const error = event.url.searchParams.get("error") ?? undefined;
+
+			if (error) {
+				const error_description =
+					event.url.searchParams.get("error_description") ?? undefined;
+
+				if (!config.oauth.errorLoginRedirectPath) {
+					return new Response(`${error}\n${error_description}`.trimEnd(), {
+						headers: {
+							"Content-Type": "text/plain",
+						},
+					});
+				}
+
+				const errorParams = queryParamsCreate({ error, error_description });
+				throw redirect(
+					302,
+					`${config.oauth.errorLoginRedirectPath}?${errorParams}`,
+				);
+			}
 
 			const code = event.url.searchParams.get("code") ?? undefined;
 			throwIfUndefined(code);
