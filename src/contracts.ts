@@ -45,7 +45,7 @@ interface OauthEndpoints {
 	readonly authorizeEndpoint: string;
 	readonly logoutEndpoint?: string;
 	readonly tokenEndpoint: string;
-	readonly logoutReturnToParam?: string,
+	readonly logoutReturnToParam?: string;
 }
 
 type OauthEndpointsOrBaseUrl = OauthBaseUrl | OauthEndpoints;
