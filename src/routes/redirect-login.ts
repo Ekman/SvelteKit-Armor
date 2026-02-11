@@ -76,11 +76,11 @@ export const routeRedirectLoginFactory: RouteFactory = (
 			const error = event.url.searchParams.get("error") ?? undefined;
 
 			if (error) {
-				const errorDescription = event.url.searchParams.get("error_description") ?? undefined;
+				const error_description = event.url.searchParams.get("error_description") ?? undefined;
 
 				if (!config.oauth.errorLoginRedirectPath) {
 					return new Response(
-						`${error}\n${errorDescription}`.trimEnd(),
+						`${error}\n${error_description}`.trimEnd(),
 						{
 							headers: {
 								"Content-Type": "text/plain",
@@ -89,7 +89,7 @@ export const routeRedirectLoginFactory: RouteFactory = (
 					);
 				}
 
-				const errorParams = queryParamsCreate({ error, error_description: errorDescription });
+				const errorParams = queryParamsCreate({ error, error_description });
 				throw redirect(302, `${config.oauth.errorLoginRedirectPath}?${errorParams}`);
 			}
 
