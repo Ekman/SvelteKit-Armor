@@ -42,7 +42,7 @@ export async function armorConfigFromOpenId(
 	fetch?: typeof global.fetch,
 ): Promise<ArmorConfig> {
 	const fetchToUse = fetch ?? global.fetch;
-https://zitadel.com/pricing
+
 	const response = await fetchToUse(config.oauth.openIdConfigEndpoint, {
 		headers: {
 			Accept: "application/json",
