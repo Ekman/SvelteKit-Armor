@@ -18,7 +18,7 @@ export const routeRedirectLoginFactory: RouteFactory = (
 ) => {
 	const jwksUrl = new URL(
 		config.oauth.jwksEndpoint ??
-		urlConcat(config.oauth.baseUrl, ".well-known/jwks.json"),
+			urlConcat(config.oauth.baseUrl, ".well-known/jwks.json"),
 	);
 
 	const tokenUrl =
@@ -76,21 +76,22 @@ export const routeRedirectLoginFactory: RouteFactory = (
 			const error = event.url.searchParams.get("error") ?? undefined;
 
 			if (error) {
-				const error_description = event.url.searchParams.get("error_description") ?? undefined;
+				const error_description =
+					event.url.searchParams.get("error_description") ?? undefined;
 
 				if (!config.oauth.errorLoginRedirectPath) {
-					return new Response(
-						`${error}\n${error_description}`.trimEnd(),
-						{
-							headers: {
-								"Content-Type": "text/plain",
-							},
+					return new Response(`${error}\n${error_description}`.trimEnd(), {
+						headers: {
+							"Content-Type": "text/plain",
 						},
-					);
+					});
 				}
 
 				const errorParams = queryParamsCreate({ error, error_description });
-				throw redirect(302, `${config.oauth.errorLoginRedirectPath}?${errorParams}`);
+				throw redirect(
+					302,
+					`${config.oauth.errorLoginRedirectPath}?${errorParams}`,
+				);
 			}
 
 			const code = event.url.searchParams.get("code") ?? undefined;
