@@ -53,7 +53,7 @@ async function jwtVerifyToken(
 		const { payload } = await jwtVerify(token, jwks, opts);
 		return payload;
 	} catch (e) {
-		if (e instanceof JWTInvalid && /compact JWS/gi.test(e.message)) {
+		if (e instanceof JWTInvalid && /invalid compact jws/gi.test(e.message)) {
 			return undefined;
 		}
 
