@@ -22,6 +22,7 @@ export function jwtVerifyIdToken(
 		idToken,
 	);
 	throwIfUndefined(payload);
+	// @ts-expect-error We're already verifying non-null above.
 	return payload;
 }
 
