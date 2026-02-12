@@ -1,7 +1,6 @@
 import { ArmorConfig } from "../contracts";
 import { JWTPayload, jwtVerify, JWTVerifyGetKey, JWTVerifyOptions } from "jose";
 import { throwIfUndefined } from "@nekm/core";
-import { JWTInvalid } from "jose/errors";
 
 function jwtIsCompactJwt(token: string): boolean {
 	// Must be three base64url segments
@@ -40,6 +39,10 @@ export function jwtVerifyAccessToken(
 	return jwtVerifyToken(jwks, opts, accessToken);
 }
 
+function isInvalidCompactJwt(error: unknown): boolean {
+	return Boolean(typeof error === "object" && error && "message" in error && typeof error.message === "string" && /invalid compact jws/gi.test(error.message));
+}
+
 async function jwtVerifyToken(
 	jwks: JWTVerifyGetKey,
 	opts: JWTVerifyOptions,
@@ -52,11 +55,11 @@ async function jwtVerifyToken(
 
 		const { payload } = await jwtVerify(token, jwks, opts);
 		return payload;
-	} catch (e) {
-		if (e instanceof JWTInvalid && /invalid compact jws/gi.test(e.message)) {
+	} catch (error) {
+		if (isInvalidCompactJwt(error)) {
 			return undefined;
 		}
 
-		throw e;
+		throw error;
 	}
 }
