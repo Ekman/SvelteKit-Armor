@@ -26,7 +26,7 @@ export interface ArmorAccessToken extends JWTPayload {
 export interface ArmorTokens {
 	readonly exchange: ArmorTokenExchange;
 	readonly idToken: ArmorIdToken;
-	readonly accessToken: ArmorAccessToken;
+	readonly accessToken: ArmorAccessToken | string;
 }
 
 interface OauthBaseUrl {
