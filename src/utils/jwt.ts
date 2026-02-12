@@ -1,12 +1,12 @@
 import { ArmorConfig } from "../contracts";
 import { JWTPayload, jwtVerify, JWTVerifyGetKey, JWTVerifyOptions } from "jose";
-import {throwIfUndefined} from "@nekm/core";
-import {JWTInvalid} from "jose/errors";
+import { throwIfUndefined } from "@nekm/core";
+import { JWTInvalid } from "jose/errors";
 
 function jwtIsCompactJwt(token: string): boolean {
 	// Must be three base64url segments
-	const parts = token.trim().split('.');
-	return parts.length === 3 && parts.every(p => p.length > 0);
+	const parts = token.trim().split(".");
+	return parts.length === 3 && parts.every((p) => p.length > 0);
 }
 
 export function jwtVerifyIdToken(
@@ -50,10 +50,10 @@ async function jwtVerifyToken(
 			return undefined;
 		}
 
-		const {payload} = await jwtVerify(token, jwks, opts);
+		const { payload } = await jwtVerify(token, jwks, opts);
 		return payload;
 	} catch (e) {
-		if (e instanceof JWTInvalid && /compact JWS/ig.test(e.message)) {
+		if (e instanceof JWTInvalid && /compact JWS/gi.test(e.message)) {
 			return undefined;
 		}
 
