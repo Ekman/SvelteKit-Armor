@@ -33,13 +33,21 @@ jobs:
           git add .
           git diff --quiet --cached || git commit -am "chore: lint and format"
           git push --set-upstream origin $CIRCLE_BRANCH
+  build:
+    executor: *executor
+    steps:
+      - checkout
+      - node/install-packages
+      - run: npm run build
 workflows:
   main:
     jobs:
       - lint_format:
-          filters:
+          filters: &ignore-main
             branches:
               ignore: main
+      - build:
+          filters: *ignore-main
       - node/test:
           name: unit_test
           test-results-for: jest
