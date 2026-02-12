@@ -40,7 +40,13 @@ export function jwtVerifyAccessToken(
 }
 
 function isInvalidCompactJwt(error: unknown): boolean {
-	return Boolean(typeof error === "object" && error && "message" in error && typeof error.message === "string" && /invalid compact jws/gi.test(error.message));
+	return Boolean(
+		typeof error === "object" &&
+		error &&
+		"message" in error &&
+		typeof error.message === "string" &&
+		/invalid compact jws/gi.test(error.message),
+	);
 }
 
 async function jwtVerifyToken(
