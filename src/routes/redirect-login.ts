@@ -113,7 +113,9 @@ export const routeRedirectLoginFactory: RouteFactory = (
 			await config.session.login(event, {
 				exchange,
 				idToken: idToken as ArmorIdToken,
-				accessToken,
+				// Generally, IdP's require an audience to get a JWT
+				// access token. Most cases, this doesn't matter.
+				accessToken: accessToken ?? exchange.access_token,
 			});
 
 			throw redirect(302, "/");
