@@ -14,7 +14,8 @@
   "module": "./dist/index.esm.js",
   "scripts": {
     "build": "microbundle --format esm,cjs --target node",
-    "test": "jest"
+    "test": "jest",
+    "format": "eslint --fix --max-warnings=0 --cache src && prettier --log-level warn --write src"
   },
   "maintainers": [
     {
@@ -57,6 +58,7 @@
   ],
   "sideEffects": false,
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@sveltejs/kit": "^2.53.2",
     "@tsconfig/recommended": "^1.0.13",
     "@types/jest": "^30.0.0",
