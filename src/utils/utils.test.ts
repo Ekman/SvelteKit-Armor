@@ -63,6 +63,12 @@ describe("shouldRefresh", () => {
 			accessTokenExp: toSeconds(NOW + 10 * MINUTES_MS),
 			expected: true,
 		},
+		{
+			description: "id token expires sooner than access token",
+			idTokenExp: 0,
+			accessTokenExp: toSeconds(NOW + 10 * MINUTES_MS),
+			expected: true,
+		},
 	])("$description", ({ idTokenExp, accessTokenExp, expected }) => {
 		const tokens = {
 			idToken: { exp: idTokenExp },
