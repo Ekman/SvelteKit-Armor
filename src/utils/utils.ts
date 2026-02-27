@@ -1,5 +1,5 @@
 import { strTrimEnd, strTrimStart } from "@nekm/core";
-import type { ArmorTokenExchange } from "../contracts";
+import type { ArmorTokenExchange, ArmorTokens } from "../contracts";
 
 export function urlConcat(origin: string, path: string): string {
 	return [strTrimEnd(origin, "/"), strTrimStart(path, "/")].join("/");
@@ -20,4 +20,16 @@ export function isTokenExchange(value: unknown): value is ArmorTokenExchange {
 			obj.refresh_token === undefined) &&
 		(typeof obj.scope === "string" || obj.scope === undefined)
 	);
+}
+
+const MINUTES_MS = 60 * 1000;
+
+export function shouldRefresh(tokens: ArmorTokens) {
+	return tokens.expiresAt.getTime() < Date.now() + 5 * MINUTES_MS;
+}
+
+export function createExpiresAt(seconds: number): Date {
+	const now = new Date();
+	now.setSeconds(now.getSeconds() + seconds);
+	return now;
 }

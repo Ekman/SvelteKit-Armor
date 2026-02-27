@@ -19,6 +19,7 @@ export const routeLogoutFactory: RouteFactory = (config: ArmorConfig) => {
 
 	return {
 		path: ROUTE_PATH_LOGOUT,
+		method: "GET",
 		async handle({ event }) {
 			const state = randomUUID();
 			cookieSet(event.cookies, COOKIE_STATE, state);

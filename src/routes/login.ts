@@ -6,8 +6,9 @@ import { randomUUID } from "node:crypto";
 import type { RouteFactory } from "./routes";
 import { COOKIE_STATE, cookieSet } from "../utils/cookie";
 import { urlConcat } from "../utils/utils";
+import { ARMOR_LOGIN } from "../browser";
 
-export const ROUTE_PATH_LOGIN = "/_armor/login";
+export const ROUTE_PATH_LOGIN = ARMOR_LOGIN;
 
 export const routeLoginFactory: RouteFactory = (config: ArmorConfig) => {
 	const authorizeEndpoint =
@@ -18,6 +19,7 @@ export const routeLoginFactory: RouteFactory = (config: ArmorConfig) => {
 
 	return {
 		path: ROUTE_PATH_LOGIN,
+		method: "GET",
 		async handle({ event }) {
 			const state = randomUUID();
 			cookieSet(event.cookies, COOKIE_STATE, state);

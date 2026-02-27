@@ -1,85 +1,94 @@
 {
-  "name": "@nekm/sveltekit-armor",
-  "version": "0.0.1",
-  "description": "Zero-config OAuth protection for SvelteKit",
-  "license": "MIT",
-  "source": "./src/index.ts",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    "import": "./dist/index.esm.js",
-    "types": "./dist/index.d.ts",
-    "default": "./dist/index.js"
-  },
-  "main": "./dist/index.js",
-  "module": "./dist/index.esm.js",
-  "scripts": {
-    "build": "microbundle --format esm,cjs --target node",
-    "test": "jest",
-    "format": "eslint --fix --max-warnings=0 --cache src && prettier --log-level warn --write src"
-  },
-  "maintainers": [
-    {
-      "email": "niklas@niklasekman.solutions",
-      "name": "Niklas Ekman",
-      "url": "https://www.niklasekman.solutions"
-    }
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Ekman/SvelteKit-Armor.git"
-  },
-  "homepage": "https://github.com/Ekman/SvelteKit-Armor#readme",
-  "files": [
-    "dist",
-    "src"
-  ],
-  "author": {
-    "name": "Niklas Ekman",
-    "email": "niklas@niklasekman.solutions"
-  },
-  "keywords": [
-    "sveltekit",
-    "svelte",
-    "auth",
-    "authentication",
-    "oauth",
-    "oauth2",
-    "oidc",
-    "openid-connect",
-    "cognito",
-    "auth0",
-    "keycloak",
-    "security",
-    "protect",
-    "session",
-    "authorization",
-    "sveltekit-auth",
-    "sveltekit-oauth"
-  ],
-  "sideEffects": false,
-  "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@sveltejs/kit": "^2.53.2",
-    "@tsconfig/recommended": "^1.0.13",
-    "@types/jest": "^30.0.0",
-    "@types/node": "^24",
-    "@typescript-eslint/eslint-plugin": "^8.56.1",
-    "@typescript-eslint/parser": "^8.56.1",
-    "eslint": "^10",
-    "globals": "^17.3.0",
-    "jest": "^30.2.0",
-    "jest-junit": "^16.0.0",
-    "microbundle": "^0.15.1",
-    "prettier": "^3.8.1",
-    "ts-jest": "^29.4.6",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
-  },
-  "dependencies": {
-    "@nekm/core": "^1",
-    "jose": "^6"
-  },
-  "peerDependencies": {
-    "@sveltejs/kit": "^2"
-  }
+	"name": "@nekm/sveltekit-armor",
+	"version": "0.0.1",
+	"description": "Zero-config OAuth protection for SvelteKit",
+	"license": "MIT",
+	"source": "./src/index.ts",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": "./dist/index.esm.js",
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js",
+			"source": "./src/index.ts"
+		},
+		"./browser": {
+			"import": "./dist/browser/index.esm.js",
+			"types": "./dist/browser/index.d.ts",
+			"default": "./dist/browser/index.js",
+			"source": "./src/browser/index.ts"
+		}
+	},
+	"main": "./dist/index.js",
+	"module": "./dist/index.esm.js",
+	"scripts": {
+		"build": "microbundle --format esm,cjs --target node",
+		"test": "jest",
+		"format": "eslint --fix --max-warnings=0 --cache src && prettier --log-level warn --write src"
+	},
+	"maintainers": [
+		{
+			"email": "niklas@niklasekman.solutions",
+			"name": "Niklas Ekman",
+			"url": "https://www.niklasekman.solutions"
+		}
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Ekman/SvelteKit-Armor.git"
+	},
+	"homepage": "https://github.com/Ekman/SvelteKit-Armor#readme",
+	"files": [
+		"dist",
+		"src"
+	],
+	"author": {
+		"name": "Niklas Ekman",
+		"email": "niklas@niklasekman.solutions"
+	},
+	"keywords": [
+		"sveltekit",
+		"svelte",
+		"auth",
+		"authentication",
+		"oauth",
+		"oauth2",
+		"oidc",
+		"openid-connect",
+		"cognito",
+		"auth0",
+		"keycloak",
+		"security",
+		"protect",
+		"session",
+		"authorization",
+		"sveltekit-auth",
+		"sveltekit-oauth"
+	],
+	"sideEffects": false,
+	"devDependencies": {
+		"@eslint/js": "^10.0.1",
+		"@sveltejs/kit": "^2.53.2",
+		"@tsconfig/recommended": "^1.0.13",
+		"@types/jest": "^30.0.0",
+		"@types/node": "^24",
+		"@typescript-eslint/eslint-plugin": "^8.56.1",
+		"@typescript-eslint/parser": "^8.56.1",
+		"eslint": "^10",
+		"globals": "^17.3.0",
+		"jest": "^30.2.0",
+		"jest-junit": "^16.0.0",
+		"microbundle": "^0.15.1",
+		"prettier": "^3.8.1",
+		"ts-jest": "^29.4.6",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.9.3"
+	},
+	"dependencies": {
+		"@nekm/core": "^1",
+		"jose": "^6"
+	},
+	"peerDependencies": {
+		"@sveltejs/kit": "^2"
+	}
 }

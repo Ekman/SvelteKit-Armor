@@ -27,6 +27,7 @@ export interface ArmorTokens {
 	readonly exchange: ArmorTokenExchange;
 	readonly idToken: ArmorIdToken;
 	readonly accessToken: ArmorAccessToken | string;
+	readonly expiresAt: Date;
 }
 
 interface OauthBaseUrl {
@@ -36,6 +37,7 @@ interface OauthBaseUrl {
 	readonly authorizeEndpoint?: never;
 	readonly logoutEndpoint?: never;
 	readonly tokenEndpoint?: never;
+	readonly refreshEndpoint?: never;
 }
 
 interface OauthEndpoints {
@@ -45,18 +47,21 @@ interface OauthEndpoints {
 	readonly authorizeEndpoint: string;
 	readonly logoutEndpoint?: string;
 	readonly tokenEndpoint: string;
+	readonly refreshEndpoint: string;
 }
 
 type OauthEndpointsOrBaseUrl = OauthBaseUrl | OauthEndpoints;
 
 export interface ArmorConfig {
 	readonly session: {
-		readonly exists: (event: RequestEvent) => Promise<boolean> | boolean;
 		readonly login: (
 			event: RequestEvent,
 			tokens: ArmorTokens,
 		) => Promise<void> | void;
 		readonly logout: (event: RequestEvent) => Promise<void> | void;
+		readonly getTokens: (
+			event: RequestEvent,
+		) => Promise<ArmorTokens | undefined> | ArmorTokens | undefined;
 	};
 	readonly oauth: OauthEndpointsOrBaseUrl & {
 		readonly clientId: string;
