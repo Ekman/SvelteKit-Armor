@@ -4,10 +4,12 @@ import { routeLoginFactory } from "./login";
 import { routeLogoutFactory } from "./logout";
 import { routeRedirectLogoutFactory } from "./redirect-logout";
 import { routeRedirectLoginFactory } from "./redirect-login";
+import { routeRefreshFactory } from "./refresh";
 
 export interface Route {
 	readonly path: string;
 	readonly handle: Handle;
+	readonly method: "GET" | "POST";
 }
 
 export type RouteFactory = (config: ArmorConfig) => Route | undefined;
@@ -17,14 +19,16 @@ const routeFactories = Object.freeze([
 	routeLogoutFactory,
 	routeRedirectLoginFactory,
 	routeRedirectLogoutFactory,
+	routeRefreshFactory,
 ]);
 
-export function routeCreate(config: ArmorConfig): Map<string, Handle> {
+export function routeCreate(config: ArmorConfig): Map<string, Route> {
+	// @ts-expect-error Incorrect typing error.
 	return new Map(
 		routeFactories
 			.map((routeFactory) => routeFactory(config))
 			.filter((route) => Boolean(route))
 			// @ts-expect-error Incorrect typing error.
-			.map((route) => [route.path, route.handle]),
+			.map((route) => [route.path, route]),
 	);
 }

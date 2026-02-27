@@ -15,6 +15,7 @@ export const routeRedirectLogoutFactory: RouteFactory = (
 
 	return {
 		path: ROUTE_PATH_REDIRECT_LOGOUT,
+		method: "GET",
 		async handle({ event }) {
 			eventStateValidOrThrow(event);
 

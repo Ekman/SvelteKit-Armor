@@ -1,30 +1,43 @@
 import { redirect, type Handle } from "@sveltejs/kit";
 import { ROUTE_PATH_LOGIN } from "./routes/login";
 import type { ArmorConfig, ArmorOpenIdConfig, ArmorTokens } from "./contracts";
-import { ROUTE_PATH_LOGOUT } from "./routes/logout";
 import { routeCreate } from "./routes/routes";
-import { ArmorOpenIdConfigError } from "./errors";
+import { ArmorOpenIdConfigError, ArmorRefreshError } from "./errors";
+import { shouldRefresh } from "./utils/utils";
+import { createRefresh } from "./utils/refresh";
 
 export type { ArmorConfig, ArmorTokens };
 export { armorCookieSession, armorCookieSessionGet } from "./session/cookie";
 
-export const ARMOR_LOGIN = ROUTE_PATH_LOGIN;
-export const ARMOR_LOGOUT = ROUTE_PATH_LOGOUT;
-
 export function armor(config: ArmorConfig): Handle {
-	const routes = routeCreate(config);
+	const routeByPath = routeCreate(config);
+	const refresh = createRefresh(config);
 
 	return async ({ event, resolve }) => {
-		const routeHandle = routes.get(event.url.pathname);
+		const route = routeByPath.get(event.url.pathname);
 
-		if (routeHandle) {
-			return routeHandle({ event, resolve });
+		if (route && route.method === event.request.method) {
+			return route.handle({ event, resolve });
 		}
 
-		const exists = await config.session.exists(event);
+		const tokens = await config.session.getTokens(event);
 
-		if (!exists) {
+		if (!tokens) {
 			throw redirect(302, ROUTE_PATH_LOGIN);
+		}
+
+		try {
+			if (shouldRefresh(tokens)) {
+				console.log("Refreshing token...");
+				await refresh(event, tokens);
+			}
+		} catch (error) {
+			if (error instanceof ArmorRefreshError) {
+				console.error("Could not refresh token. Redirect user to login...");
+				throw redirect(302, ROUTE_PATH_LOGIN);
+			}
+
+			throw error;
 		}
 
 		return resolve(event);
@@ -65,6 +78,7 @@ export async function armorConfigFromOpenId(
 			issuer: body.issuer,
 			jwksEndpoint: body.jwks_uri,
 			logoutEndpoint: body.end_session_endpoint ?? undefined,
+			refreshEndpoint: body.token_endpoint,
 		},
 	};
 }
