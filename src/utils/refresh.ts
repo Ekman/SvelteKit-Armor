@@ -70,6 +70,8 @@ export function armorCreateRefresh(config: ArmorConfig) {
 				let validTokens = tokens;
 
 				if (!shouldRefresh(tokens)) {
+					console.log("Refreshing tokens...");
+
 					throwIfUndefined(tokens.exchange.refresh_token);
 
 					const newExchange = await refresh(
