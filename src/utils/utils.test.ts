@@ -71,6 +71,7 @@ describe("shouldRefresh", () => {
 					? accessTokenExp
 					: { exp: accessTokenExp },
 		};
+		// @ts-expect-error It's OK
 		expect(shouldRefresh(tokens)).toBe(expected);
 	});
 });
