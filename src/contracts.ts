@@ -51,6 +51,10 @@ interface OauthEndpoints {
 }
 
 type OauthEndpointsOrBaseUrl = OauthBaseUrl | OauthEndpoints;
+type LoggerFunction = (
+	message: string,
+	params?: Record<string, unknown>,
+) => void;
 
 export interface ArmorConfig {
 	readonly session: {
@@ -86,6 +90,12 @@ export interface ArmorConfig {
 		 * @default {undefined} Armor will throw an error
 		 */
 		readonly errorLoginRedirectPath?: string;
+	};
+	readonly logger?: {
+		readonly debug?: LoggerFunction;
+		readonly info?: LoggerFunction;
+		readonly warning?: LoggerFunction;
+		readonly error?: LoggerFunction;
 	};
 }
 

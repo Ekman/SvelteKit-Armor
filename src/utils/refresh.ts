@@ -70,7 +70,7 @@ export function armorRefreshFactory(config: ArmorConfig) {
 				let validTokens = tokens;
 
 				if (shouldRefresh(tokens)) {
-					console.log("Refreshing tokens...");
+					config.logger?.debug?.("Tokens has expired. Refreshing...");
 
 					throwIfUndefined(tokens.exchange.refresh_token);
 
@@ -79,12 +79,19 @@ export function armorRefreshFactory(config: ArmorConfig) {
 						tokens.exchange.refresh_token,
 					);
 
+					config.logger?.debug?.("Exchange code for tokens.", { newExchange });
+
 					const jwks = createRemoteJWKSet(jwksUrl);
 
 					const [idToken, accessToken] = await Promise.all([
 						jwtVerifyIdToken(config, jwks, newExchange.id_token),
 						jwtVerifyAccessToken(config, jwks, newExchange.access_token),
 					]);
+
+					config.logger?.debug?.("Extract and verify tokens.", {
+						idToken,
+						accessToken,
+					});
 
 					validTokens = exchangeToTokens(
 						newExchange,
