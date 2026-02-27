@@ -71,6 +71,8 @@ export const routeRedirectLoginFactory: RouteFactory = (
 	return {
 		path: ROUTE_PATH_REDIRECT_LOGIN,
 		async handle({ event }) {
+			config.logger?.debug?.("Handle login redirect callback.");
+
 			eventStateValidOrThrow(event);
 
 			const error = event.url.searchParams.get("error") ?? undefined;
@@ -78,6 +80,11 @@ export const routeRedirectLoginFactory: RouteFactory = (
 			if (error) {
 				const error_description =
 					event.url.searchParams.get("error_description") ?? undefined;
+
+				config.logger?.error?.("Login returned error.", {
+					error,
+					errorDescription: error_description,
+				});
 
 				if (!config.oauth.errorLoginRedirectPath) {
 					return new Response(`${error}\n${error_description}`.trimEnd(), {
@@ -95,6 +102,7 @@ export const routeRedirectLoginFactory: RouteFactory = (
 			}
 
 			const code = event.url.searchParams.get("code") ?? undefined;
+			config.logger?.debug?.("Get code from query params.", { code });
 			throwIfUndefined(code);
 
 			const exchange = await exchangeCodeForToken(
@@ -103,12 +111,19 @@ export const routeRedirectLoginFactory: RouteFactory = (
 				code,
 			);
 
+			config.logger?.debug?.("Exchange code for tokens.", { exchange });
+
 			const jwks = createRemoteJWKSet(jwksUrl);
 
 			const [idToken, accessToken] = await Promise.all([
 				jwtVerifyIdToken(config, jwks, exchange.id_token),
 				jwtVerifyAccessToken(config, jwks, exchange.access_token),
 			]);
+
+			config.logger?.debug?.("Extract and verify tokens.", {
+				idToken,
+				accessToken,
+			});
 
 			await config.session.login(
 				event,

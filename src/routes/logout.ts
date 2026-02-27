@@ -4,8 +4,6 @@ import { queryParamsCreate } from "@nekm/core";
 import { ROUTE_PATH_REDIRECT_LOGOUT } from "./redirect-logout";
 import type { RouteFactory } from "./routes";
 import { urlConcat } from "../utils/utils";
-import { randomUUID } from "node:crypto";
-import { COOKIE_STATE, cookieSet } from "../utils/cookie";
 import { ARMOR_LOGOUT } from "../browser";
 
 export const ROUTE_PATH_LOGOUT = ARMOR_LOGOUT;
@@ -20,18 +18,17 @@ export const routeLogoutFactory: RouteFactory = (config: ArmorConfig) => {
 
 	return {
 		path: ROUTE_PATH_LOGOUT,
-		method: "GET",
 		async handle({ event }) {
-			const state = randomUUID();
-			cookieSet(event.cookies, COOKIE_STATE, state);
-
-			const params = queryParamsCreate({
+			const params = {
 				[returnTo]: urlConcat(event.url.origin, ROUTE_PATH_REDIRECT_LOGOUT),
 				client_id: config.oauth.clientId,
-				state,
-			});
+			};
 
-			throw redirect(302, `${config.oauth.logoutEndpoint}?${params}`);
+			const paramsStr = queryParamsCreate(params);
+
+			config.logger?.debug?.("Pre logout redirect.", { params });
+
+			throw redirect(302, `${config.oauth.logoutEndpoint}?${paramsStr}`);
 		},
 	};
 };

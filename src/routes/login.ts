@@ -23,16 +23,20 @@ export const routeLoginFactory: RouteFactory = (config: ArmorConfig) => {
 			const state = randomUUID();
 			cookieSet(event.cookies, COOKIE_STATE, state);
 
-			const params = queryParamsCreate({
+			const params = {
 				client_id: config.oauth.clientId,
 				response_type: "code",
 				redirect_uri: urlConcat(event.url.origin, ROUTE_PATH_REDIRECT_LOGIN),
 				state,
 				scope,
 				audience: config.oauth.audience,
-			});
+			};
 
-			throw redirect(302, `${authorizeEndpoint}?${params}`);
+			const paramsStr = queryParamsCreate(params);
+
+			config.logger?.debug?.("Pre login redirect.", { params, state });
+
+			throw redirect(302, `${authorizeEndpoint}?${paramsStr}`);
 		},
 	};
 };
