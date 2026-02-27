@@ -39,6 +39,14 @@ jobs:
       - checkout
       - node/install-packages
       - run: npm run build
+  unit_test:
+    executor: *executor
+    steps:
+      - checkout
+      - node/install-packages
+      - run: >
+          npx vitest run --reporter=default
+          --reporter=junit --outputFile=junit.xml
 workflows:
   main:
     jobs:
@@ -48,22 +56,17 @@ workflows:
               ignore: main
       - build:
           filters: *ignore-main
-      - node/test:
-          name: unit_test
-          test-results-for: jest
-          executor: *executor
+      - unit_test:
+          filters: *ignore-main
   deploy:
     jobs:
-      - node/test:
-          name: &unit_test unit_test
-          test-results-for: jest
-          executor: *executor
+      - unit_test:
           filters: &deploy_filters
             tags:
               only: /^\d+\.\d+\.\d+$/
             branches:
               ignore: /.*/
       - deploy:
-          requires: [*unit_test]
+          requires: [unit_test]
           context: [npm]
           filters: *deploy_filters

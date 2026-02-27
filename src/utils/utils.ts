@@ -38,7 +38,7 @@ export function shouldRefresh(
 			: Infinity;
 	const expiry = Math.min(tokens.idToken.exp, accessExpiry);
 
-	return expiry < Date.now() + 5 * MINUTES_MS;
+	return expiry * 1000 < Date.now() + 5 * MINUTES_MS;
 }
 
 export function createExpiresAt(seconds: number): Date {
