@@ -99,7 +99,10 @@ export interface ArmorConfig {
 	};
 }
 
-export interface ArmorOpenIdConfig extends Pick<ArmorConfig, "session"> {
+export interface ArmorOpenIdConfig extends Pick<
+	ArmorConfig,
+	"session" | "logger"
+> {
 	readonly oauth: Pick<
 		ArmorConfig["oauth"],
 		| "clientId"
