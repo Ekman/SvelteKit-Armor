@@ -34,9 +34,9 @@ export function shouldRefresh(
 ): boolean {
 	const accessExpiry =
 		typeof tokens.accessToken !== "string" && tokens.accessToken.exp
-			? tokens.accessToken.exp
+			? tokens.accessToken.exp * 1000
 			: Infinity;
-	const expiry = Math.min(tokens.idToken.exp, accessExpiry);
+	const expiry = Math.min(tokens.idToken.exp * 1000, accessExpiry);
 
 	return expiry < Date.now() + 5 * MINUTES_MS;
 }
