@@ -37,6 +37,7 @@ export function armorCreateRefresh(config: ArmorConfig) {
 		}
 
 		const response = await fetch(refreshEndpoint, {
+			method: "POST",
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded",
 				Accept: "application/json",
@@ -58,6 +59,7 @@ export function armorCreateRefresh(config: ArmorConfig) {
 	};
 
 	const postRefresh = async (
+		event: RequestEvent,
 		exchange: ArmorTokenExchange,
 	): Promise<ArmorTokens> => {
 		const jwks = createRemoteJWKSet(jwksUrl);
@@ -67,13 +69,21 @@ export function armorCreateRefresh(config: ArmorConfig) {
 			jwtVerifyAccessToken(config, jwks, exchange.access_token),
 		]);
 
-		return exchangeToTokens(exchange, idToken as ArmorIdToken, accessToken);
+		const tokens = exchangeToTokens(
+			exchange,
+			idToken as ArmorIdToken,
+			accessToken,
+		);
+
+		await config.session.login(event, tokens);
+
+		return tokens;
 	};
 
 	return {
 		refresh,
 		async ensureValidToken<T>(
-			fetch: typeof global.fetch,
+			event: RequestEvent,
 			tokens: ArmorTokens,
 			fn: (tokens: ArmorTokens) => T | Promise<T>,
 		): Promise<T> {
@@ -82,7 +92,7 @@ export function armorCreateRefresh(config: ArmorConfig) {
 			if (shouldRefresh(tokens)) {
 				throwIfUndefined(tokens.exchange.refresh_token);
 				const newTokens = await refresh(fetch, tokens.exchange.refresh_token);
-				validTokens = await postRefresh(newTokens);
+				validTokens = await postRefresh(event, newTokens);
 			}
 
 			return fn(validTokens);
@@ -99,7 +109,7 @@ export function armorCreateRefresh(config: ArmorConfig) {
 
 			const exchange = await refresh(event.fetch, refreshToken);
 
-			return postRefresh(exchange);
+			return postRefresh(event, exchange);
 		},
 	};
 }
