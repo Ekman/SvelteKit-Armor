@@ -12,7 +12,7 @@ import { redirect, RequestEvent } from "@sveltejs/kit";
 import { throwIfUndefined } from "@nekm/core";
 import { ROUTE_PATH_LOGIN } from "../routes/login";
 
-export function armorCreateRefresh(config: ArmorConfig) {
+export function armorRefreshFactory(config: ArmorConfig) {
 	const refreshEndpoint =
 		config.oauth.refreshEndpoint ??
 		urlConcat(config.oauth.baseUrl, "oauth2/token");

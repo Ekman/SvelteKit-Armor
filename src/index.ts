@@ -1,22 +1,22 @@
 import { redirect, type Handle } from "@sveltejs/kit";
 import { ROUTE_PATH_LOGIN } from "./routes/login";
 import type { ArmorConfig, ArmorOpenIdConfig, ArmorTokens } from "./contracts";
-import { routeCreate } from "./routes/routes";
+import { routeByPathFactory } from "./routes/routes";
 import { ArmorOpenIdConfigError } from "./errors";
-import { armorCreateRefresh } from "./utils/refresh";
+import { armorRefreshFactory } from "./utils/refresh";
 
 export type { ArmorConfig, ArmorTokens };
 export { armorCookieSession, armorCookieSessionGet } from "./session/cookie";
-export { armorCreateRefresh } from "./utils/refresh";
+export { armorRefreshFactory } from "./utils/refresh";
 
 export function armor(config: ArmorConfig): Handle {
-	const routeByPath = routeCreate(config);
-	const refresh = armorCreateRefresh(config);
+	const routeByPath = routeByPathFactory(config);
+	const refresh = armorRefreshFactory(config);
 
 	return async ({ event, resolve }) => {
 		const route = routeByPath.get(event.url.pathname);
 
-		if (route && route.method === event.request.method) {
+		if (route) {
 			return route.handle({ event, resolve });
 		}
 

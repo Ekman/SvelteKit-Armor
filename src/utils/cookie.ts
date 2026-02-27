@@ -1,7 +1,7 @@
 import { Cookies } from "@sveltejs/kit";
 
-export const COOKIE_TOKENS = "tokens";
-export const COOKIE_STATE = "state";
+export const COOKIE_TOKENS = "tokens" as const;
+export const COOKIE_STATE = "state" as const;
 
 const cookieDeleteOptions = Object.freeze({ path: "/" });
 

@@ -6,8 +6,9 @@ import type { RouteFactory } from "./routes";
 import { urlConcat } from "../utils/utils";
 import { randomUUID } from "node:crypto";
 import { COOKIE_STATE, cookieSet } from "../utils/cookie";
+import { ARMOR_LOGOUT } from "../browser";
 
-export const ROUTE_PATH_LOGOUT = "/_armor/logout";
+export const ROUTE_PATH_LOGOUT = ARMOR_LOGOUT;
 
 export const routeLogoutFactory: RouteFactory = (config: ArmorConfig) => {
 	// Check if the oauth provider supports a logout path.
