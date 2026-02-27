@@ -70,7 +70,6 @@ export const routeRedirectLoginFactory: RouteFactory = (
 
 	return {
 		path: ROUTE_PATH_REDIRECT_LOGIN,
-		method: "GET",
 		async handle({ event }) {
 			eventStateValidOrThrow(event);
 

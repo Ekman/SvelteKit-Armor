@@ -40,7 +40,7 @@ export function shouldRefresh(
 			? tokens.accessToken.exp * 1000
 			: Infinity;
 
-	return Math.min(idExpiry, accessExpiry) < (Date.now() + 5 * MINUTES_MS);
+	return Math.min(idExpiry, accessExpiry) < Date.now() + 5 * MINUTES_MS;
 }
 
 export function createExpiresAt(seconds: number): Date {
