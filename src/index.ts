@@ -30,7 +30,7 @@ export function armor(config: ArmorConfig): Handle {
 		try {
 			if (shouldRefresh(tokens)) {
 				console.log("Refreshing token...");
-				await refresh(event, tokens);
+				await refresh.handler(event, tokens);
 			}
 		} catch (error) {
 			if (error instanceof ArmorRefreshError) {
