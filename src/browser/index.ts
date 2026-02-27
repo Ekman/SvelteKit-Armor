@@ -9,7 +9,7 @@ export interface ArmorBrowserRefresh {
 export const ARMOR_REFRESH = "/_armor/refresh";
 export const ARMOR_LOGIN = "/_armor/login";
 
-export async function armorRefresh(): Promise<ArmorBrowserRefresh> {
+export async function armorBrowserRefresh(): Promise<ArmorBrowserRefresh> {
 	const response = await fetch(ARMOR_REFRESH, {
 		method: "POST",
 		headers: {

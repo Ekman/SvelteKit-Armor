@@ -10,7 +10,7 @@ import { createExpiresAt, urlConcat } from "./utils";
 import { jwtVerifyAccessToken, jwtVerifyIdToken } from "./jwt";
 import { RequestEvent } from "@sveltejs/kit";
 
-export function createRefresh(config: ArmorConfig) {
+export function armorCreateRefresh(config: ArmorConfig) {
 	const refreshEndpoint =
 		config.oauth.refreshEndpoint ??
 		urlConcat(config.oauth.baseUrl, "oauth2/token");
