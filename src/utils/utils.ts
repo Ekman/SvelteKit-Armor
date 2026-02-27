@@ -34,11 +34,11 @@ export function shouldRefresh(
 ): boolean {
 	const accessExpiry =
 		typeof tokens.accessToken !== "string" && tokens.accessToken.exp
-			? tokens.accessToken.exp * 1000
+			? tokens.accessToken.exp
 			: Infinity;
-	const expiry = Math.min(tokens.idToken.exp * 1000, accessExpiry);
+	const expiry = Math.min(tokens.idToken.exp, accessExpiry);
 
-	return expiry < Date.now() + 5 * MINUTES_MS;
+	return expiry * 1000 < Date.now() + 5 * MINUTES_MS;
 }
 
 export function createExpiresAt(seconds: number): Date {
