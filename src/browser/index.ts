@@ -1,4 +1,6 @@
+import { ArmorTokens } from "../contracts";
 import { ArmorRefreshError } from "../errors";
+import { shouldRefresh } from "../utils/utils";
 
 export interface ArmorBrowserRefresh {
 	readonly idToken: string;
@@ -29,4 +31,17 @@ export async function armorBrowserRefresh(): Promise<ArmorBrowserRefresh> {
 	}
 
 	return response.json();
+}
+
+type ArmorBrowserTokens = Pick<ArmorTokens, "idToken" | "accessToken">;
+
+export async function armorBrowserEnsureValidTokens<T>(
+	tokens: ArmorBrowserTokens,
+	fn: (tokens: ArmorBrowserTokens) => T | Promise<T>,
+): Promise<T> {
+	if (shouldRefresh(tokens)) {
+		await armorBrowserRefresh();
+	}
+
+	return fn(tokens);
 }

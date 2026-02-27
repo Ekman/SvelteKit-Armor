@@ -1,5 +1,10 @@
 import { strTrimEnd, strTrimStart } from "@nekm/core";
-import type { ArmorTokenExchange, ArmorTokens } from "../contracts";
+import type {
+	ArmorAccessToken,
+	ArmorIdToken,
+	ArmorTokenExchange,
+	ArmorTokens,
+} from "../contracts";
 
 export function urlConcat(origin: string, path: string): string {
 	return [strTrimEnd(origin, "/"), strTrimStart(path, "/")].join("/");
@@ -24,12 +29,35 @@ export function isTokenExchange(value: unknown): value is ArmorTokenExchange {
 
 const MINUTES_MS = 60 * 1000;
 
-export function shouldRefresh(tokens: ArmorTokens) {
-	return tokens.expiresAt.getTime() < Date.now() + 5 * MINUTES_MS;
+export function shouldRefresh(
+	tokens: Pick<ArmorTokens, "idToken" | "accessToken">,
+): boolean {
+	const accessExpiry =
+		typeof tokens.accessToken !== "string" && tokens.accessToken.exp
+			? tokens.accessToken.exp
+			: Infinity;
+	const expiry = Math.min(tokens.idToken.exp, accessExpiry);
+
+	return expiry < Date.now() + 5 * MINUTES_MS;
 }
 
 export function createExpiresAt(seconds: number): Date {
 	const now = new Date();
 	now.setSeconds(now.getSeconds() + seconds);
 	return now;
+}
+
+export function exchangeToTokens(
+	exchange: ArmorTokenExchange,
+	idToken: ArmorIdToken,
+	accessToken?: ArmorAccessToken,
+): ArmorTokens {
+	return {
+		exchange,
+		idToken: idToken as ArmorIdToken,
+		// Generally, IdP's require an audience to get a JWT
+		// access token. Most cases, this doesn't matter.
+		accessToken: accessToken ?? exchange.access_token,
+		expiresAt: createExpiresAt(exchange.expires_in),
+	};
 }
