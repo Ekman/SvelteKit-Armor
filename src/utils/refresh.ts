@@ -8,8 +8,9 @@ import {
 import { ArmorRefreshError } from "../errors";
 import { exchangeToTokens, shouldRefresh, urlConcat } from "./utils";
 import { jwtVerifyAccessToken, jwtVerifyIdToken } from "./jwt";
-import { RequestEvent } from "@sveltejs/kit";
+import { redirect, RequestEvent } from "@sveltejs/kit";
 import { throwIfUndefined } from "@nekm/core";
+import { ROUTE_PATH_LOGIN } from "../routes/login";
 
 export function armorCreateRefresh(config: ArmorConfig) {
 	const refreshEndpoint =
@@ -58,28 +59,6 @@ export function armorCreateRefresh(config: ArmorConfig) {
 		};
 	};
 
-	const postRefresh = async (
-		event: RequestEvent,
-		exchange: ArmorTokenExchange,
-	): Promise<ArmorTokens> => {
-		const jwks = createRemoteJWKSet(jwksUrl);
-
-		const [idToken, accessToken] = await Promise.all([
-			jwtVerifyIdToken(config, jwks, exchange.id_token),
-			jwtVerifyAccessToken(config, jwks, exchange.access_token),
-		]);
-
-		const tokens = exchangeToTokens(
-			exchange,
-			idToken as ArmorIdToken,
-			accessToken,
-		);
-
-		await config.session.login(event, tokens);
-
-		return tokens;
-	};
-
 	return {
 		refresh,
 		async ensureValidToken<T>(
@@ -87,29 +66,41 @@ export function armorCreateRefresh(config: ArmorConfig) {
 			tokens: ArmorTokens,
 			fn: (tokens: ArmorTokens) => T | Promise<T>,
 		): Promise<T> {
-			let validTokens = tokens;
+			try {
+				let validTokens = tokens;
 
-			if (shouldRefresh(tokens)) {
-				throwIfUndefined(tokens.exchange.refresh_token);
-				const newTokens = await refresh(fetch, tokens.exchange.refresh_token);
-				validTokens = await postRefresh(event, newTokens);
+				if (!shouldRefresh(tokens)) {
+					throwIfUndefined(tokens.exchange.refresh_token);
+
+					const newExchange = await refresh(
+						fetch,
+						tokens.exchange.refresh_token,
+					);
+
+					const jwks = createRemoteJWKSet(jwksUrl);
+
+					const [idToken, accessToken] = await Promise.all([
+						jwtVerifyIdToken(config, jwks, newExchange.id_token),
+						jwtVerifyAccessToken(config, jwks, newExchange.access_token),
+					]);
+
+					validTokens = exchangeToTokens(
+						newExchange,
+						idToken as ArmorIdToken,
+						accessToken,
+					);
+
+					await config.session.login(event, tokens);
+				}
+
+				return fn(validTokens);
+			} catch (error) {
+				if (error instanceof ArmorRefreshError) {
+					throw redirect(302, ROUTE_PATH_LOGIN);
+				}
+
+				throw error;
 			}
-
-			return fn(validTokens);
-		},
-		async handler(
-			event: RequestEvent,
-			tokens: ArmorTokens,
-		): Promise<ArmorTokens> {
-			const refreshToken = tokens.exchange?.refresh_token;
-
-			if (!refreshToken) {
-				throw new ArmorRefreshError("Could not find refresh token");
-			}
-
-			const exchange = await refresh(event.fetch, refreshToken);
-
-			return postRefresh(event, exchange);
 		},
 	};
 }
