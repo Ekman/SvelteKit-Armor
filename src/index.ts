@@ -2,8 +2,7 @@ import { redirect, type Handle } from "@sveltejs/kit";
 import { ROUTE_PATH_LOGIN } from "./routes/login";
 import type { ArmorConfig, ArmorOpenIdConfig, ArmorTokens } from "./contracts";
 import { routeCreate } from "./routes/routes";
-import { ArmorOpenIdConfigError, ArmorRefreshError } from "./errors";
-import { shouldRefresh } from "./utils/utils";
+import { ArmorOpenIdConfigError } from "./errors";
 import { armorCreateRefresh } from "./utils/refresh";
 
 export type { ArmorConfig, ArmorTokens };
@@ -27,21 +26,7 @@ export function armor(config: ArmorConfig): Handle {
 			throw redirect(302, ROUTE_PATH_LOGIN);
 		}
 
-		try {
-			if (shouldRefresh(tokens)) {
-				console.log("Refreshing token...");
-				await refresh.handler(event, tokens);
-			}
-		} catch (error) {
-			if (error instanceof ArmorRefreshError) {
-				console.error("Could not refresh token. Redirect user to login...");
-				throw redirect(302, ROUTE_PATH_LOGIN);
-			}
-
-			throw error;
-		}
-
-		return resolve(event);
+		return refresh.ensureValidToken(event, tokens, () => resolve(event));
 	};
 }
 
