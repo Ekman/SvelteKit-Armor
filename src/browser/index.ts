@@ -2,16 +2,12 @@ import { ArmorTokens } from "../contracts";
 import { ArmorRefreshError } from "../errors";
 import { shouldRefresh } from "../utils/utils";
 
-export interface ArmorBrowserRefresh {
-	readonly idToken: string;
-	readonly accessToken: string;
-	readonly expiresAt: Date;
-}
-
 export const ARMOR_REFRESH = "/_armor/refresh";
 export const ARMOR_LOGIN = "/_armor/login";
 
-export async function armorBrowserRefresh(): Promise<ArmorBrowserRefresh> {
+type ArmorBrowserTokens = Pick<ArmorTokens, "idToken" | "accessToken">;
+
+export async function armorBrowserRefresh(): Promise<ArmorBrowserTokens> {
 	const response = await fetch(ARMOR_REFRESH, {
 		method: "POST",
 		headers: {
@@ -33,15 +29,13 @@ export async function armorBrowserRefresh(): Promise<ArmorBrowserRefresh> {
 	return response.json();
 }
 
-type ArmorBrowserTokens = Pick<ArmorTokens, "idToken" | "accessToken">;
-
 export async function armorBrowserEnsureValidTokens<T>(
 	tokens: ArmorBrowserTokens,
 	fn: (tokens: ArmorBrowserTokens) => T | Promise<T>,
 ): Promise<T> {
-	if (shouldRefresh(tokens)) {
-		await armorBrowserRefresh();
-	}
+	const validTokens = shouldRefresh(tokens)
+		? await armorBrowserRefresh()
+		: tokens;
 
-	return fn(tokens);
+	return fn(validTokens);
 }

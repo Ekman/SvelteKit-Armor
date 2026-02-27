@@ -21,12 +21,9 @@ export const routeRefreshFactory: RouteFactory = (config: ArmorConfig) => {
 					return error(401, "Unauthorized");
 				}
 
-				const { idToken, expiresAt, accessToken } = await refresh(
-					event,
-					tokens,
-				);
+				const { idToken, accessToken } = await refresh.handler(event, tokens);
 
-				return json({ idToken, expiresAt, accessToken });
+				return json({ idToken, accessToken });
 			} catch (ex) {
 				if (ex instanceof ArmorRefreshError) {
 					return error(401, "Unauthorized");
