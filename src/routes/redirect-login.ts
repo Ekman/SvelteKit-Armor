@@ -7,7 +7,7 @@ import type {
 import { queryParamsCreate, throwIfUndefined } from "@nekm/core";
 import { createRemoteJWKSet } from "jose";
 import type { RouteFactory } from "./routes";
-import { urlConcat, isTokenExchange, createExpiresAt } from "../utils/utils";
+import { urlConcat, isTokenExchange, exchangeToTokens } from "../utils/utils";
 import { jwtVerifyAccessToken, jwtVerifyIdToken } from "../utils/jwt";
 import { eventStateValidOrThrow } from "../utils/event";
 
@@ -111,14 +111,10 @@ export const routeRedirectLoginFactory: RouteFactory = (
 				jwtVerifyAccessToken(config, jwks, exchange.access_token),
 			]);
 
-			await config.session.login(event, {
-				exchange,
-				idToken: idToken as ArmorIdToken,
-				// Generally, IdP's require an audience to get a JWT
-				// access token. Most cases, this doesn't matter.
-				accessToken: accessToken ?? exchange.access_token,
-				expiresAt: createExpiresAt(exchange.expires_in),
-			});
+			await config.session.login(
+				event,
+				exchangeToTokens(exchange, idToken as ArmorIdToken, accessToken),
+			);
 
 			throw redirect(302, "/");
 		},
