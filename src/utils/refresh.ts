@@ -92,7 +92,7 @@ export function armorCreateRefresh(config: ArmorConfig) {
 						accessToken,
 					);
 
-					await config.session.login(event, tokens);
+					await config.session.login(event, validTokens);
 				}
 
 				return fn(validTokens);
