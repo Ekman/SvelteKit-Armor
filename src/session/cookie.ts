@@ -8,7 +8,9 @@ import {
 import { ArmorConfig, ArmorTokens } from "../contracts";
 import { ArmorAuthMissingError } from "../errors";
 
-function cookieSessionGetTokens({ cookies }: RequestEvent): ArmorTokens | undefined {
+function cookieSessionGetTokens({
+	cookies,
+}: RequestEvent): ArmorTokens | undefined {
 	return cookies.get(COOKIE_TOKENS) as ArmorTokens | undefined;
 }
 
