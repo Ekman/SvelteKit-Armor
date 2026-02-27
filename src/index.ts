@@ -8,6 +8,7 @@ import { armorCreateRefresh } from "./utils/refresh";
 
 export type { ArmorConfig, ArmorTokens };
 export { armorCookieSession, armorCookieSessionGet } from "./session/cookie";
+export { armorCreateRefresh } from "./utils/refresh";
 
 export function armor(config: ArmorConfig): Handle {
 	const routeByPath = routeCreate(config);
