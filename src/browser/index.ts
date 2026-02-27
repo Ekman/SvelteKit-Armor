@@ -21,7 +21,7 @@ export async function armorRefresh(): Promise<ArmorBrowserRefresh> {
 		if (response.status === 401) {
 			// eslint-disable-next-line no-undef
 			window.location.href = ARMOR_LOGIN;
-			throw new ArmorRefreshError('Redirecting to login');
+			throw new ArmorRefreshError("Redirecting to login");
 		}
 
 		const error = await response.text();
