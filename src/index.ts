@@ -4,14 +4,14 @@ import type { ArmorConfig, ArmorOpenIdConfig, ArmorTokens } from "./contracts";
 import { routeCreate } from "./routes/routes";
 import { ArmorOpenIdConfigError, ArmorRefreshError } from "./errors";
 import { shouldRefresh } from "./utils/utils";
-import { createRefresh } from "./utils/refresh";
+import { armorCreateRefresh } from "./utils/refresh";
 
 export type { ArmorConfig, ArmorTokens };
 export { armorCookieSession, armorCookieSessionGet } from "./session/cookie";
 
 export function armor(config: ArmorConfig): Handle {
 	const routeByPath = routeCreate(config);
-	const refresh = createRefresh(config);
+	const refresh = armorCreateRefresh(config);
 
 	return async ({ event, resolve }) => {
 		const route = routeByPath.get(event.url.pathname);

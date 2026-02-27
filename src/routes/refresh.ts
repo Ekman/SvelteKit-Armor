@@ -1,14 +1,14 @@
 import { error, json } from "@sveltejs/kit";
 import type { ArmorConfig } from "../contracts";
 import type { RouteFactory } from "./routes";
-import { createRefresh } from "../utils/refresh";
+import { armorCreateRefresh } from "../utils/refresh";
 import { ARMOR_REFRESH } from "../browser";
 import { ArmorRefreshError } from "../errors";
 
 export const ROUTE_PATH_REFRESH = ARMOR_REFRESH;
 
 export const routeRefreshFactory: RouteFactory = (config: ArmorConfig) => {
-	const refresh = createRefresh(config);
+	const refresh = armorCreateRefresh(config);
 
 	return {
 		path: ROUTE_PATH_REFRESH,
