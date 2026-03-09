@@ -72,7 +72,9 @@ export function armorRefreshFactory(config: ArmorConfig) {
 				if (shouldRefresh(tokens)) {
 					config.logger?.debug?.("Tokens has expired. Refreshing...");
 
-					throwIfUndefined(tokens.exchange.refresh_token);
+					if (!tokens.exchange.refresh_token) {
+						throw redirect(302, ROUTE_PATH_LOGIN);
+					}
 
 					const newExchange = await refresh(
 						fetch,
