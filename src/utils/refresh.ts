@@ -9,7 +9,6 @@ import { ArmorRefreshError } from "../errors";
 import { exchangeToTokens, shouldRefresh, urlConcat } from "./utils";
 import { jwtVerifyAccessToken, jwtVerifyIdToken } from "./jwt";
 import { redirect, RequestEvent } from "@sveltejs/kit";
-import { throwIfUndefined } from "@nekm/core";
 import { ROUTE_PATH_LOGIN } from "../routes/login";
 
 export function armorRefreshFactory(config: ArmorConfig) {
