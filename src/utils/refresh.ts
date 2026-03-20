@@ -15,7 +15,7 @@ export interface ArmorRefresh {
 	readonly refresh: (
 		fetch: typeof global.fetch,
 		refreshToken: string,
-	) => Promise<ArmorTokenExchange>;
+	) => Promise<ArmorTokens>;
 	readonly ensureValidToken: <T>(
 		event: RequestEvent,
 		tokens: ArmorTokens,
@@ -36,7 +36,7 @@ export function armorRefreshFactory(config: ArmorConfig): ArmorRefresh {
 	const refresh = async (
 		fetch: typeof global.fetch,
 		refreshToken: string,
-	): Promise<ArmorTokenExchange> => {
+	): Promise<ArmorTokens> => {
 		const body = new URLSearchParams({
 			grant_type: "refresh_token",
 			client_id: config.oauth.clientId,
@@ -64,10 +64,32 @@ export function armorRefreshFactory(config: ArmorConfig): ArmorRefresh {
 
 		const json: ArmorTokenExchange = await response.json();
 
-		return {
+		const newExchange = {
 			...json,
 			refresh_token: json.refresh_token ?? refreshToken,
 		};
+
+		config.logger?.debug?.("Exchange code for tokens.", { newExchange });
+
+		const jwks = createRemoteJWKSet(jwksUrl);
+
+		const [idToken, accessToken] = await Promise.all([
+			jwtVerifyIdToken(config, jwks, newExchange.id_token),
+			jwtVerifyAccessToken(config, jwks, newExchange.access_token),
+		]);
+
+		config.logger?.debug?.("Extract and verify tokens.", {
+			idToken,
+			accessToken,
+		});
+
+		const validTokens = exchangeToTokens(
+			newExchange,
+			idToken as ArmorIdToken,
+			accessToken,
+		);
+
+		return validTokens;
 	};
 
 	return {
@@ -87,30 +109,7 @@ export function armorRefreshFactory(config: ArmorConfig): ArmorRefresh {
 						throw redirect(302, ROUTE_PATH_LOGIN);
 					}
 
-					const newExchange = await refresh(
-						fetch,
-						tokens.exchange.refresh_token,
-					);
-
-					config.logger?.debug?.("Exchange code for tokens.", { newExchange });
-
-					const jwks = createRemoteJWKSet(jwksUrl);
-
-					const [idToken, accessToken] = await Promise.all([
-						jwtVerifyIdToken(config, jwks, newExchange.id_token),
-						jwtVerifyAccessToken(config, jwks, newExchange.access_token),
-					]);
-
-					config.logger?.debug?.("Extract and verify tokens.", {
-						idToken,
-						accessToken,
-					});
-
-					validTokens = exchangeToTokens(
-						newExchange,
-						idToken as ArmorIdToken,
-						accessToken,
-					);
+					validTokens = await refresh(fetch, tokens.exchange.refresh_token);
 
 					await config.session.login(event, validTokens);
 				}
