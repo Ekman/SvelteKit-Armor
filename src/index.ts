@@ -29,12 +29,14 @@ export function armor(config: ArmorConfig): Armor {
 			const tokens = await config.session.getTokens(event);
 
 			if (!tokens) {
-				config.logger?.warning?.("Could not find tokens. Redirecting to login.");
+				config.logger?.warning?.(
+					"Could not find tokens. Redirecting to login.",
+				);
 				throw redirect(302, ROUTE_PATH_LOGIN);
 			}
 
 			return refresh.ensureValidToken(event, tokens, () => resolve(event));
-		}
+		},
 	};
 }
 

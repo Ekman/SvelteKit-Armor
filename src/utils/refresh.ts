@@ -12,7 +12,10 @@ import { redirect, RequestEvent } from "@sveltejs/kit";
 import { ROUTE_PATH_LOGIN } from "../routes/login";
 
 export interface ArmorRefresh {
-	readonly refresh: (fetch: typeof global.fetch, refreshToken: string) => Promise<ArmorTokenExchange>;
+	readonly refresh: (
+		fetch: typeof global.fetch,
+		refreshToken: string,
+	) => Promise<ArmorTokenExchange>;
 	readonly ensureValidToken: <T>(
 		event: RequestEvent,
 		tokens: ArmorTokens,
@@ -27,7 +30,7 @@ export function armorRefreshFactory(config: ArmorConfig): ArmorRefresh {
 
 	const jwksUrl = new URL(
 		config.oauth.jwksEndpoint ??
-		urlConcat(config.oauth.baseUrl, ".well-known/jwks.json"),
+			urlConcat(config.oauth.baseUrl, ".well-known/jwks.json"),
 	);
 
 	const refresh = async (
