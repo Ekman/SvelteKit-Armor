@@ -3,31 +3,38 @@ import { ROUTE_PATH_LOGIN } from "./routes/login";
 import type { ArmorConfig, ArmorOpenIdConfig, ArmorTokens } from "./contracts";
 import { routeByPathFactory } from "./routes/routes";
 import { ArmorOpenIdConfigError } from "./errors";
-import { armorRefreshFactory } from "./utils/refresh";
+import { ArmorRefresh, armorRefreshFactory } from "./utils/refresh";
 
 export type { ArmorConfig, ArmorTokens };
 export { armorCookieSession, armorCookieSessionGet } from "./session/cookie";
 export { armorRefreshFactory } from "./utils/refresh";
 
-export function armor(config: ArmorConfig): Handle {
+interface Armor extends ArmorRefresh {
+	readonly handle: Handle;
+}
+
+export function armor(config: ArmorConfig): Armor {
 	const routeByPath = routeByPathFactory(config);
 	const refresh = armorRefreshFactory(config);
 
-	return async ({ event, resolve }) => {
-		const route = routeByPath.get(event.url.pathname);
+	return {
+		...refresh,
+		async handle({ event, resolve }) {
+			const route = routeByPath.get(event.url.pathname);
 
-		if (route) {
-			return route.handle({ event, resolve });
+			if (route) {
+				return route.handle({ event, resolve });
+			}
+
+			const tokens = await config.session.getTokens(event);
+
+			if (!tokens) {
+				config.logger?.warning?.("Could not find tokens. Redirecting to login.");
+				throw redirect(302, ROUTE_PATH_LOGIN);
+			}
+
+			return refresh.ensureValidToken(event, tokens, () => resolve(event));
 		}
-
-		const tokens = await config.session.getTokens(event);
-
-		if (!tokens) {
-			config.logger?.warning?.("Could not find tokens. Redirecting to login.");
-			throw redirect(302, ROUTE_PATH_LOGIN);
-		}
-
-		return refresh.ensureValidToken(event, tokens, () => resolve(event));
 	};
 }
 

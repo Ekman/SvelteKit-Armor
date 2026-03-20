@@ -11,14 +11,23 @@ import { jwtVerifyAccessToken, jwtVerifyIdToken } from "./jwt";
 import { redirect, RequestEvent } from "@sveltejs/kit";
 import { ROUTE_PATH_LOGIN } from "../routes/login";
 
-export function armorRefreshFactory(config: ArmorConfig) {
+export interface ArmorRefresh {
+	readonly refresh: (fetch: typeof global.fetch, refreshToken: string) => Promise<ArmorTokenExchange>;
+	readonly ensureValidToken: <T>(
+		event: RequestEvent,
+		tokens: ArmorTokens,
+		fn: (tokens: ArmorTokens) => T | Promise<T>,
+	) => Promise<T>;
+}
+
+export function armorRefreshFactory(config: ArmorConfig): ArmorRefresh {
 	const refreshEndpoint =
 		config.oauth.refreshEndpoint ??
 		urlConcat(config.oauth.baseUrl, "oauth2/token");
 
 	const jwksUrl = new URL(
 		config.oauth.jwksEndpoint ??
-			urlConcat(config.oauth.baseUrl, ".well-known/jwks.json"),
+		urlConcat(config.oauth.baseUrl, ".well-known/jwks.json"),
 	);
 
 	const refresh = async (

@@ -19,7 +19,7 @@ Create a `src/hooks.server.ts` and write:
 ```js
 import { armor, armorCookieSession } from '@nekm/sveltekit-armor';
 
-export const handle = armor({
+const { handle: armorHandle } = armor({
 	oauth: {
 		clientId: 'foo',
 		clientSecret: 'bar',
@@ -28,6 +28,8 @@ export const handle = armor({
 	},
 	session: armorCookieSession,
 });
+
+export const handle = armorHandle;
 ```
 
 Done. Entire app now requires login.
@@ -60,11 +62,11 @@ Assume you only want to protect routes prefixed by `admin`. Create a `src/hooks.
 ```js
 import { armor } from '@nekm/sveltekit-armor';
 
-const protect = armor({ /* config */ });
+const { handle: armorHandle } = armor({ /* config */ });
 
 export const handle = ({ event, resolve }) => {
 	if (event.url.pathname.startsWith('/admin')) {
-		return protect({ event, resolve });
+		return armorHandle({ event, resolve });
 	}
 
 	return resolve(event);
