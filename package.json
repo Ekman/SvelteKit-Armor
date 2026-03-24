@@ -71,8 +71,8 @@
 		"@sveltejs/kit": "^2.55.0",
 		"@tsconfig/recommended": "^1.0.13",
 		"@types/node": "^24",
-		"@typescript-eslint/eslint-plugin": "^8.57.2",
-		"@typescript-eslint/parser": "^8.57.2",
+		"@typescript-eslint/eslint-plugin": "^8.57.1",
+		"@typescript-eslint/parser": "^8.57.1",
 		"eslint": "^10",
 		"globals": "^17.4.0",
 		"microbundle": "^0.15.1",
@@ -80,7 +80,7 @@
 		"ts-jest": "^29.4.6",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.9.3",
-		"vitest": "^4.1.1"
+		"vitest": "^4.1.0"
 	},
 	"dependencies": {
 		"@nekm/core": "^1",
