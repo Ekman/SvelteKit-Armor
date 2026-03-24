@@ -9,7 +9,7 @@ export type { ArmorConfig, ArmorTokens };
 export { armorCookieSession, armorCookieSessionGet } from "./session/cookie";
 export { armorRefreshFactory } from "./utils/refresh";
 
-interface Armor extends ArmorRefresh {
+export interface Armor extends ArmorRefresh {
 	readonly handle: Handle;
 }
 
