@@ -77,7 +77,7 @@ export const routeRedirectLoginFactory: RouteFactory = (
 			// If the states does not match, redirect the user to login.
 			// People bookmark the wrong pages all the time. Lets not
 			// do a throw here.
-			if (eventStateValid(event)) {
+			if (!eventStateValid(event)) {
 				config.logger?.warning?.("State missmatch");
 				throw redirect(302, ROUTE_PATH_LOGIN);
 			}
