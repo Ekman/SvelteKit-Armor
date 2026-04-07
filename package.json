@@ -3,26 +3,23 @@
 	"version": "0.0.1",
 	"description": "Zero-config OAuth protection for SvelteKit",
 	"license": "MIT",
-	"source": "./src/index.ts",
 	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
-			"source": "./src/index.ts",
-			"import": "./dist/index.esm.js",
+			"import": "./dist/index.mjs",
 			"types": "./dist/index.d.ts",
 			"default": "./dist/index.js"
 		},
 		"./browser": {
-			"source": "./src/browser/index.ts",
-			"import": "./dist/browser/index.esm.js",
+			"import": "./dist/browser/index.mjs",
 			"types": "./dist/browser/index.d.ts",
 			"default": "./dist/browser/index.js"
 		}
 	},
 	"main": "./dist/index.js",
-	"module": "./dist/index.esm.js",
+	"module": "./dist/index.mjs",
 	"scripts": {
-		"build": "microbundle --format esm,cjs --target node",
+		"build": "tsup && tsc --declaration --emitDeclarationOnly",
 		"test": "vitest run",
 		"format": "eslint --fix --max-warnings=0 --cache src && prettier --log-level warn --write src"
 	},
@@ -75,10 +72,10 @@
 		"@typescript-eslint/parser": "^8.58.0",
 		"eslint": "^10",
 		"globals": "^17.4.0",
-		"microbundle": "^0.15.1",
 		"prettier": "^3.8.1",
 		"ts-jest": "^29.4.9",
 		"ts-node": "^10.9.2",
+		"tsup": "^8",
 		"typescript": "^6.0.2",
 		"vitest": "^4.1.3"
 	},
