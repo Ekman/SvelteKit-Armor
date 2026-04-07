@@ -9,7 +9,8 @@ import { createRemoteJWKSet } from "jose";
 import type { RouteFactory } from "./routes";
 import { urlConcat, isTokenExchange, exchangeToTokens } from "../utils/utils";
 import { jwtVerifyAccessToken, jwtVerifyIdToken } from "../utils/jwt";
-import { eventStateValidOrThrow } from "../utils/event";
+import { eventStateValid } from "../utils/event";
+import { ROUTE_PATH_LOGIN } from "./login";
 
 export const ROUTE_PATH_REDIRECT_LOGIN = "/_armor/redirect/login";
 
@@ -73,7 +74,13 @@ export const routeRedirectLoginFactory: RouteFactory = (
 		async handle({ event }) {
 			config.logger?.debug?.("Handle login redirect callback.");
 
-			eventStateValidOrThrow(event);
+			// If the states does not match, redirect the user to login.
+			// People bookmark the wrong pages all the time. Lets not
+			// do a throw here.
+			if (!eventStateValid(event)) {
+				config.logger?.warning?.("State missmatch");
+				throw redirect(302, ROUTE_PATH_LOGIN);
+			}
 
 			const error = event.url.searchParams.get("error") ?? undefined;
 
