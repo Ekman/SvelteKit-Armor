@@ -31,16 +31,19 @@ const MINUTES_MS = 60 * 1000;
 
 export function shouldRefresh(
 	tokens: Pick<ArmorTokens, "idToken" | "accessToken">,
+	nowDate?: Date
 ): boolean {
+	const now = nowDate?.getTime() ?? Date.now();
+
 	const idExpiry = tokens.idToken.exp * 1000;
 
 	const accessExpiry =
 		typeof tokens.accessToken !== "string" &&
-		tokens.accessToken.exp !== undefined
+			tokens.accessToken.exp !== undefined
 			? tokens.accessToken.exp * 1000
 			: Infinity;
 
-	return Math.min(idExpiry, accessExpiry) < Date.now() + 5 * MINUTES_MS;
+	return Math.min(idExpiry, accessExpiry) < now + 5 * MINUTES_MS;
 }
 
 export function createExpiresAt(seconds: number): Date {
