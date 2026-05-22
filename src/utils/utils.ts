@@ -39,6 +39,7 @@ export function shouldRefresh(
 
 	const accessExpiry =
 		typeof tokens.accessToken !== "string" &&
+			"exp" in tokens.accessToken &&
 			tokens.accessToken.exp !== undefined
 			? tokens.accessToken.exp * 1000
 			: Infinity;

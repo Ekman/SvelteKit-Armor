@@ -11,7 +11,7 @@ import { ArmorAuthMissingError } from "../errors";
 function cookieSessionGetTokens({
 	cookies,
 }: RequestEvent): ArmorTokens | undefined {
-	return cookies.get(COOKIE_TOKENS) as ArmorTokens | undefined;
+	return cookieGet<ArmorTokens>(cookies, COOKIE_TOKENS);
 }
 
 export function cookieSessionLogin(
