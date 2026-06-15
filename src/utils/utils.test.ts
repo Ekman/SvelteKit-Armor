@@ -1,6 +1,5 @@
 import { describe, test, expect, vi, beforeEach, afterEach, it } from "vitest";
 import { isTokenExchange, shouldRefresh, urlConcat } from "./utils";
-import { ArmorTokens } from "../contracts";
 
 describe("utils", () => {
 	it("should be able to concat URL with path", () => {
