@@ -21,7 +21,7 @@
 	"scripts": {
 		"build": "tsup && tsc --declaration --emitDeclarationOnly",
 		"test": "vitest run",
-		"format": "eslint --fix --max-warnings=0 --cache src && prettier --log-level warn --write src"
+		"format": "prettier --log-level warn --write src && eslint --fix --max-warnings=0 --cache src"
 	},
 	"maintainers": [
 		{
@@ -66,13 +66,12 @@
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
 		"@sveltejs/kit": "^2.65.2",
-		"@tsconfig/recommended": "^1.0.13",
 		"@types/node": "^25",
 		"@typescript-eslint/eslint-plugin": "^8.61.1",
 		"@typescript-eslint/parser": "^8.61.1",
 		"eslint": "^10",
+		"globals": "^17.6.0",
 		"prettier": "^3.8.4",
-		"ts-node": "^10.9.2",
 		"tsup": "^8",
 		"typescript": "^6.0.3",
 		"vitest": "^4.1.9"

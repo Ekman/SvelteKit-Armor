@@ -31,7 +31,7 @@ const MINUTES_MS = 60 * 1000;
 
 export function shouldRefresh(
 	tokens: Pick<ArmorTokens, "idToken" | "accessToken">,
-	nowDate?: Date
+	nowDate?: Date,
 ): boolean {
 	const now = nowDate?.getTime() ?? Date.now();
 
@@ -39,8 +39,8 @@ export function shouldRefresh(
 
 	const accessExpiry =
 		typeof tokens.accessToken !== "string" &&
-			"exp" in tokens.accessToken &&
-			tokens.accessToken.exp !== undefined
+		"exp" in tokens.accessToken &&
+		tokens.accessToken.exp !== undefined
 			? tokens.accessToken.exp * 1000
 			: Infinity;
 
