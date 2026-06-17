@@ -8,9 +8,9 @@ import {
 import { ArmorConfig, ArmorTokens } from "../contracts";
 import { ArmorAuthMissingError } from "../errors";
 
-function cookieSessionGetTokens({
+export function armorCookieSessionGet({
 	cookies,
-}: RequestEvent): ArmorTokens | undefined {
+}: Pick<RequestEvent, 'cookies'>): ArmorTokens | undefined {
 	return cookieGet<ArmorTokens>(cookies, COOKIE_TOKENS);
 }
 
@@ -21,12 +21,12 @@ export function cookieSessionLogin(
 	cookieSet(cookies, COOKIE_TOKENS, tokens);
 }
 
-function cookieSessionLogout({ cookies }: RequestEvent): void {
+function cookieSessionLogout({ cookies }: Pick<RequestEvent, 'cookies'>): void {
 	cookieDelete(cookies, COOKIE_TOKENS);
 }
 
-export function armorCookieSessionGet({ cookies }: RequestEvent): ArmorTokens {
-	const tokens = cookieGet<ArmorTokens>(cookies, COOKIE_TOKENS);
+export function armorCookieSessionGetOrThrow({ cookies }: Pick<RequestEvent, 'cookies'>): ArmorTokens {
+	const tokens = armorCookieSessionGet({ cookies });
 
 	if (!tokens) {
 		throw new ArmorAuthMissingError();
@@ -36,7 +36,7 @@ export function armorCookieSessionGet({ cookies }: RequestEvent): ArmorTokens {
 }
 
 export const armorCookieSession: ArmorConfig["session"] = {
-	getTokens: cookieSessionGetTokens,
+	getTokens: armorCookieSessionGet,
 	login: cookieSessionLogin,
 	logout: cookieSessionLogout,
 };

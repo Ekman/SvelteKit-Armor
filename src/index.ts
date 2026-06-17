@@ -6,7 +6,7 @@ import { ArmorOpenIdConfigError } from "./errors";
 import { ArmorRefresh, armorRefreshFactory } from "./utils/refresh";
 
 export type { ArmorConfig, ArmorTokens };
-export { armorCookieSession, armorCookieSessionGet } from "./session/cookie";
+export * from "./session/cookie";
 export { armorRefreshFactory } from "./utils/refresh";
 export * from "./errors";
 
