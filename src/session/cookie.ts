@@ -10,7 +10,7 @@ import { ArmorAuthMissingError } from "../errors";
 
 export function armorCookieSessionGet<T extends ArmorTokens = ArmorTokens>({
 	cookies,
-}: Pick<RequestEvent, 'cookies'>): T | undefined {
+}: Pick<RequestEvent, "cookies">): T | undefined {
 	return cookieGet<T>(cookies, COOKIE_TOKENS);
 }
 
@@ -21,11 +21,13 @@ export function cookieSessionLogin(
 	cookieSet(cookies, COOKIE_TOKENS, tokens);
 }
 
-function cookieSessionLogout({ cookies }: Pick<RequestEvent, 'cookies'>): void {
+function cookieSessionLogout({ cookies }: Pick<RequestEvent, "cookies">): void {
 	cookieDelete(cookies, COOKIE_TOKENS);
 }
 
-export function armorCookieSessionGetOrThrow<T extends ArmorTokens = ArmorTokens>({ cookies }: Pick<RequestEvent, 'cookies'>): T {
+export function armorCookieSessionGetOrThrow<
+	T extends ArmorTokens = ArmorTokens,
+>({ cookies }: Pick<RequestEvent, "cookies">): T {
 	const tokens = armorCookieSessionGet<T>({ cookies });
 
 	if (!tokens) {
