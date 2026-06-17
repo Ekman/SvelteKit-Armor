@@ -1,11 +1,11 @@
 import { redirect, type Handle } from "@sveltejs/kit";
 import { ROUTE_PATH_LOGIN } from "./routes/login";
-import type { ArmorConfig, ArmorOpenIdConfig, ArmorTokens } from "./contracts";
+import type { ArmorConfig, ArmorOpenIdConfig } from "./contracts";
 import { routeByPathFactory } from "./routes/routes";
 import { ArmorOpenIdConfigError } from "./errors";
 import { ArmorRefresh, armorRefreshFactory } from "./utils/refresh";
 
-export type { ArmorConfig, ArmorTokens };
+export * from "./contracts";
 export * from "./session/cookie";
 export { armorRefreshFactory } from "./utils/refresh";
 export * from "./errors";
