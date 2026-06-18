@@ -17,6 +17,7 @@ export interface Armor extends ArmorRefresh {
 export function armor(config: ArmorConfig): Armor {
 	const routeByPath = routeByPathFactory(config);
 	const refresh = armorRefreshFactory(config);
+	const requireLogin = config.requireLogin ?? (() => true);
 
 	return {
 		...refresh,
@@ -25,6 +26,10 @@ export function armor(config: ArmorConfig): Armor {
 
 			if (route) {
 				return route.handle({ event, resolve });
+			}
+
+			if (!requireLogin(event)) {
+				return resolve(event);
 			}
 
 			const tokens = await config.session.getTokens(event);

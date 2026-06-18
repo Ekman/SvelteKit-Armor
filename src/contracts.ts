@@ -97,11 +97,17 @@ export interface ArmorConfig {
 		readonly warning?: LoggerFunction;
 		readonly error?: LoggerFunction;
 	};
+	/**
+	 * Specify when a login is required. Defaults to force all paths.
+	 * @param event
+	 * @returns
+	 */
+	readonly requireLogin?: (event: RequestEvent) => boolean;
 }
 
 export interface ArmorOpenIdConfig extends Pick<
 	ArmorConfig,
-	"session" | "logger"
+	"session" | "logger" | "requireLogin"
 > {
 	readonly oauth: Pick<
 		ArmorConfig["oauth"],
