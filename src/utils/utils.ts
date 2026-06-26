@@ -10,6 +10,18 @@ export function urlConcat(origin: string, path: string): string {
 	return [strTrimEnd(origin, "/"), strTrimStart(path, "/")].join("/");
 }
 
+export function safeRedirectPath(value: string | undefined): string {
+	if (!value || !value.startsWith("/")) {
+		return "/";
+	}
+
+	if (value.startsWith("//") || value.startsWith("/\\")) {
+		return "/";
+	}
+
+	return value;
+}
+
 export function isTokenExchange(value: unknown): value is ArmorTokenExchange {
 	if (typeof value !== "object" || value === null) return false;
 
