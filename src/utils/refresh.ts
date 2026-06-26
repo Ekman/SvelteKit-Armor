@@ -9,7 +9,7 @@ import { ArmorRefreshError } from "../errors";
 import { exchangeToTokens, shouldRefresh, urlConcat } from "./utils";
 import { jwtVerifyAccessToken, jwtVerifyIdToken } from "./jwt";
 import { redirect, RequestEvent } from "@sveltejs/kit";
-import { ROUTE_PATH_LOGIN } from "../routes/login";
+import { loginPathWithRedirect } from "../routes/login";
 
 export interface ArmorRefresh {
 	readonly refresh: (
@@ -106,7 +106,7 @@ export function armorRefreshFactory(config: ArmorConfig): ArmorRefresh {
 					config.logger?.debug?.("Tokens has expired. Refreshing...");
 
 					if (!tokens.exchange.refresh_token) {
-						throw redirect(302, ROUTE_PATH_LOGIN);
+						throw redirect(302, loginPathWithRedirect(event));
 					}
 
 					validTokens = await refresh(fetch, tokens.exchange.refresh_token);
@@ -117,7 +117,7 @@ export function armorRefreshFactory(config: ArmorConfig): ArmorRefresh {
 				return fn(validTokens);
 			} catch (error) {
 				if (error instanceof ArmorRefreshError) {
-					throw redirect(302, ROUTE_PATH_LOGIN);
+					throw redirect(302, loginPathWithRedirect(event));
 				}
 
 				throw error;

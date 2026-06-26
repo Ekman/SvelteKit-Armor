@@ -7,7 +7,12 @@ import type {
 import { queryParamsCreate, throwIfUndefined } from "@nekm/core";
 import { createRemoteJWKSet } from "jose";
 import type { RouteFactory } from "./routes";
-import { urlConcat, isTokenExchange, exchangeToTokens } from "../utils/utils";
+import {
+	urlConcat,
+	isTokenExchange,
+	exchangeToTokens,
+	safeRedirectPath,
+} from "../utils/utils";
 import { jwtVerifyAccessToken, jwtVerifyIdToken } from "../utils/jwt";
 import { eventStateValid } from "../utils/event";
 import { ROUTE_PATH_LOGIN } from "./login";
@@ -137,7 +142,9 @@ export const routeRedirectLoginFactory: RouteFactory = (
 				exchangeToTokens(exchange, idToken as ArmorIdToken, accessToken),
 			);
 
-			throw redirect(302, "/");
+			const target = safeRedirectPath(await config.session.getRedirect(event));
+
+			throw redirect(302, target);
 		},
 	};
 };

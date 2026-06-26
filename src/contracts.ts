@@ -66,6 +66,13 @@ export interface ArmorConfig {
 		readonly getTokens: (
 			event: RequestEvent,
 		) => Promise<ArmorTokens | undefined> | ArmorTokens | undefined;
+		readonly setRedirect: (
+			event: RequestEvent,
+			path: string,
+		) => Promise<void> | void;
+		readonly getRedirect: (
+			event: RequestEvent,
+		) => Promise<string | undefined> | string | undefined;
 	};
 	readonly oauth: OauthEndpointsOrBaseUrl & {
 		readonly clientId: string;

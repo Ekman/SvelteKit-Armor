@@ -1,5 +1,10 @@
 import { describe, test, expect, vi, beforeEach, afterEach, it } from "vitest";
-import { isTokenExchange, shouldRefresh, urlConcat } from "./utils";
+import {
+	isTokenExchange,
+	safeRedirectPath,
+	shouldRefresh,
+	urlConcat,
+} from "./utils";
 
 describe("utils", () => {
 	it("should be able to concat URL with path", () => {
@@ -15,6 +20,20 @@ describe("utils", () => {
 			expires_in: 3600,
 		};
 		expect(isTokenExchange(token)).toBe(true);
+	});
+});
+
+describe("safeRedirectPath", () => {
+	test.each([
+		{ value: "/dashboard", expected: "/dashboard" },
+		{ value: "/a/b?x=1", expected: "/a/b?x=1" },
+		{ value: "//evil.com", expected: "/" },
+		{ value: "/\\evil.com", expected: "/" },
+		{ value: "https://evil.com", expected: "/" },
+		{ value: "", expected: "/" },
+		{ value: undefined, expected: "/" },
+	])("$value -> $expected", ({ value, expected }) => {
+		expect(safeRedirectPath(value)).toBe(expected);
 	});
 });
 
