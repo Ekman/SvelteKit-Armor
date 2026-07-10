@@ -1,5 +1,5 @@
 import { redirect, type Handle } from "@sveltejs/kit";
-import { ROUTE_PATH_LOGIN } from "./routes/login";
+import { loginPathWithRedirect } from "./routes/login";
 import type { ArmorConfig, ArmorOpenIdConfig } from "./contracts";
 import { routeByPathFactory } from "./routes/routes";
 import { ArmorOpenIdConfigError } from "./errors";
@@ -38,7 +38,7 @@ export function armor(config: ArmorConfig): Armor {
 				config.logger?.warning?.(
 					"Could not find tokens. Redirecting to login.",
 				);
-				throw redirect(302, ROUTE_PATH_LOGIN);
+				throw redirect(302, loginPathWithRedirect(event));
 			}
 
 			return refresh.ensureValidToken(event, tokens, () => resolve(event));

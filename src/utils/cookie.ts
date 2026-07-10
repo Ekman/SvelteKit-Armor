@@ -2,6 +2,7 @@ import { Cookies } from "@sveltejs/kit";
 
 export const COOKIE_TOKENS = "tokens" as const;
 export const COOKIE_STATE = "state" as const;
+export const COOKIE_REDIRECT = "redirect" as const;
 
 const cookieDeleteOptions = Object.freeze({ path: "/" });
 

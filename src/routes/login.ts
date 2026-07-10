@@ -1,4 +1,4 @@
-import { redirect } from "@sveltejs/kit";
+import { redirect, type RequestEvent } from "@sveltejs/kit";
 import type { ArmorConfig } from "../contracts";
 import { queryParamsCreate } from "@nekm/core";
 import { ROUTE_PATH_REDIRECT_LOGIN } from "./redirect-login";
@@ -9,6 +9,11 @@ import { urlConcat } from "../utils/utils";
 import { ARMOR_LOGIN } from "../browser";
 
 export const ROUTE_PATH_LOGIN = ARMOR_LOGIN;
+
+export function loginPathWithRedirect(event: RequestEvent): string {
+	const redirectTo = event.url.pathname + event.url.search;
+	return `${ROUTE_PATH_LOGIN}?${queryParamsCreate({ redirect: redirectTo })}`;
+}
 
 export const routeLoginFactory: RouteFactory = (config: ArmorConfig) => {
 	const authorizeEndpoint =
@@ -22,6 +27,12 @@ export const routeLoginFactory: RouteFactory = (config: ArmorConfig) => {
 		async handle({ event }) {
 			const state = randomUUID();
 			cookieSet(event.cookies, COOKIE_STATE, state);
+
+			const redirectTo = event.url.searchParams.get("redirect") ?? undefined;
+
+			if (redirectTo) {
+				await config.session.setRedirect(event, redirectTo);
+			}
 
 			const params = {
 				client_id: config.oauth.clientId,
