@@ -65,16 +65,16 @@
 	"sideEffects": false,
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
-		"@sveltejs/kit": "^2.65.2",
-		"@types/node": "^25",
-		"@typescript-eslint/eslint-plugin": "^8.61.1",
-		"@typescript-eslint/parser": "^8.61.1",
+		"@sveltejs/kit": "^2.69.2",
+		"@types/node": "^26",
+		"@typescript-eslint/eslint-plugin": "^8.63.0",
+		"@typescript-eslint/parser": "^8.63.0",
 		"eslint": "^10",
-		"globals": "^17.6.0",
-		"prettier": "^3.8.4",
+		"globals": "^17.7.0",
+		"prettier": "^3.9.5",
 		"tsup": "^8",
 		"typescript": "^6.0.3",
-		"vitest": "^4.1.9"
+		"vitest": "^4.1.10"
 	},
 	"dependencies": {
 		"@nekm/core": "^1",
