@@ -29,6 +29,7 @@ export const routeLoginFactory: RouteFactory = (config: ArmorConfig) => {
 			cookieSet(event.cookies, COOKIE_STATE, state);
 
 			const redirectTo = event.url.searchParams.get("redirect") ?? undefined;
+			const prompt = event.url.searchParams.get("prompt") ?? undefined;
 
 			if (redirectTo) {
 				await config.session.setRedirect(event, redirectTo);
@@ -41,6 +42,7 @@ export const routeLoginFactory: RouteFactory = (config: ArmorConfig) => {
 				state,
 				scope,
 				audience: config.oauth.audience,
+				prompt,
 			};
 
 			const paramsStr = queryParamsCreate(params);
