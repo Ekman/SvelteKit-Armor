@@ -17,17 +17,25 @@ export type ArmorIdToken = Required<
 > &
 	Omit<JWTPayload, "iss" | "sub" | "aud" | "exp" | "iat">;
 
-export interface ArmorAccessToken extends JWTPayload {
-	client_id?: string;
-	scope?: string;
-	version?: number;
-}
-
 export interface ArmorTokens {
 	readonly exchange: ArmorTokenExchange;
 	readonly idToken: ArmorIdToken;
-	readonly accessToken: ArmorAccessToken | string;
-	readonly expiresAt: Date;
+	readonly expiresAt: number;
+}
+
+/**
+ * The oauth configuration with every default already applied.
+ * Armor does not refresh tokens; whoever holds them needs these
+ * values to run a refresh_token grant of their own.
+ */
+export interface ArmorOauth {
+	readonly tokenEndpoint: string;
+	readonly authorizeEndpoint: string;
+	readonly jwksEndpoint: string;
+	readonly issuer: string;
+	readonly clientId: string;
+	readonly clientSecret: string;
+	readonly scope: string;
 }
 
 interface OauthBaseUrl {
@@ -37,7 +45,6 @@ interface OauthBaseUrl {
 	readonly authorizeEndpoint?: never;
 	readonly logoutEndpoint?: never;
 	readonly tokenEndpoint?: never;
-	readonly refreshEndpoint?: never;
 }
 
 interface OauthEndpoints {
@@ -47,7 +54,6 @@ interface OauthEndpoints {
 	readonly authorizeEndpoint: string;
 	readonly logoutEndpoint?: string;
 	readonly tokenEndpoint: string;
-	readonly refreshEndpoint: string;
 }
 
 type OauthEndpointsOrBaseUrl = OauthBaseUrl | OauthEndpoints;

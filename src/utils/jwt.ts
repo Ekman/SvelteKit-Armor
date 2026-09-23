@@ -1,4 +1,4 @@
-import { ArmorConfig } from "../contracts";
+import { ArmorConfig, type ArmorIdToken } from "../contracts";
 import { JWTPayload, jwtVerify, JWTVerifyGetKey, JWTVerifyOptions } from "jose";
 import { throwIfUndefined } from "@nekm/core";
 
@@ -8,12 +8,12 @@ function jwtIsCompactJwt(token: string): boolean {
 	return parts.length === 3 && parts.every((p) => p.length > 0);
 }
 
-export function jwtVerifyIdToken(
+export async function jwtVerifyIdToken(
 	config: ArmorConfig,
 	jwks: JWTVerifyGetKey,
 	idToken: string,
-): Promise<JWTPayload> {
-	const payload = jwtVerifyToken(
+): Promise<ArmorIdToken> {
+	const payload = await jwtVerifyToken(
 		jwks,
 		{
 			issuer: config.oauth.issuer,
@@ -22,22 +22,7 @@ export function jwtVerifyIdToken(
 		idToken,
 	);
 	throwIfUndefined(payload);
-	// @ts-expect-error We're already verifying non-null above.
-	return payload;
-}
-
-export function jwtVerifyAccessToken(
-	config: ArmorConfig,
-	jwks: JWTVerifyGetKey,
-	accessToken: string,
-): Promise<JWTPayload | undefined> {
-	const opts: JWTVerifyOptions = { issuer: config.oauth.issuer };
-
-	if (config.oauth.audience) {
-		opts.audience = config.oauth.audience;
-	}
-
-	return jwtVerifyToken(jwks, opts, accessToken);
+	return payload as ArmorIdToken;
 }
 
 function isInvalidCompactJwt(error: unknown): boolean {

@@ -1,5 +1,5 @@
 import { redirect, type RequestEvent } from "@sveltejs/kit";
-import type { ArmorConfig } from "../contracts";
+import type { ArmorConfig, ArmorOauth } from "../contracts";
 import { queryParamsCreate } from "@nekm/core";
 import { ROUTE_PATH_REDIRECT_LOGIN } from "./redirect-login";
 import { randomUUID } from "node:crypto";
@@ -15,13 +15,19 @@ export function loginPathWithRedirect(event: RequestEvent): string {
 	return `${ROUTE_PATH_LOGIN}?${queryParamsCreate({ redirect: redirectTo })}`;
 }
 
-export const routeLoginFactory: RouteFactory = (config: ArmorConfig) => {
-	const authorizeEndpoint =
-		config.oauth.authorizeEndpoint ??
-		urlConcat(config.oauth.baseUrl, "oauth2/authorize");
+/**
+ * Send the user to the login flow, remembering the path they were on.
+ * Armor does not refresh tokens. Raise this from your own token handling
+ * when a refresh cannot produce a usable token.
+ */
+export function armorRedirectToLogin(event: RequestEvent): never {
+	throw redirect(302, loginPathWithRedirect(event));
+}
 
-	const scope = config.oauth.scope ?? "openid profile email";
-
+export const routeLoginFactory: RouteFactory = (
+	config: ArmorConfig,
+	oauth: ArmorOauth,
+) => {
 	return {
 		path: ROUTE_PATH_LOGIN,
 		async handle({ event }) {
@@ -35,11 +41,11 @@ export const routeLoginFactory: RouteFactory = (config: ArmorConfig) => {
 			}
 
 			const params = {
-				client_id: config.oauth.clientId,
+				client_id: oauth.clientId,
 				response_type: "code",
 				redirect_uri: urlConcat(event.url.origin, ROUTE_PATH_REDIRECT_LOGIN),
 				state,
-				scope,
+				scope: oauth.scope,
 				audience: config.oauth.audience,
 			};
 
@@ -47,7 +53,7 @@ export const routeLoginFactory: RouteFactory = (config: ArmorConfig) => {
 
 			config.logger?.debug?.("Pre login redirect.", { params, state });
 
-			throw redirect(302, `${authorizeEndpoint}?${paramsStr}`);
+			throw redirect(302, `${oauth.authorizeEndpoint}?${paramsStr}`);
 		},
 	};
 };

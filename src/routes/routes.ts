@@ -1,5 +1,6 @@
 import type { Handle } from "@sveltejs/kit";
-import type { ArmorConfig } from "../contracts";
+import type { JWTVerifyGetKey } from "jose";
+import type { ArmorConfig, ArmorOauth } from "../contracts";
 import { routeLoginFactory } from "./login";
 import { routeLogoutFactory } from "./logout";
 import { routeRedirectLogoutFactory } from "./redirect-logout";
@@ -10,7 +11,11 @@ export interface Route {
 	readonly handle: Handle;
 }
 
-export type RouteFactory = (config: ArmorConfig) => Route | undefined;
+export type RouteFactory = (
+	config: ArmorConfig,
+	oauth: ArmorOauth,
+	jwks: JWTVerifyGetKey,
+) => Route | undefined;
 
 const routeFactories = Object.freeze([
 	routeLoginFactory,
@@ -19,11 +24,15 @@ const routeFactories = Object.freeze([
 	routeRedirectLogoutFactory,
 ]);
 
-export function routeByPathFactory(config: ArmorConfig): Map<string, Route> {
+export function routeByPathFactory(
+	config: ArmorConfig,
+	oauth: ArmorOauth,
+	jwks: JWTVerifyGetKey,
+): Map<string, Route> {
 	// @ts-expect-error Incorrect typing error.
 	return new Map(
 		routeFactories
-			.map((routeFactory) => routeFactory(config))
+			.map((routeFactory) => routeFactory(config, oauth, jwks))
 			.filter((route) => Boolean(route))
 			// @ts-expect-error Incorrect typing error.
 			.map((route) => [route.path, route]),

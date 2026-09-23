@@ -1,26 +1,46 @@
-import { redirect, type Handle } from "@sveltejs/kit";
-import { loginPathWithRedirect } from "./routes/login";
-import type { ArmorConfig, ArmorOpenIdConfig } from "./contracts";
+import { type Handle } from "@sveltejs/kit";
+import { createRemoteJWKSet } from "jose";
+import { armorRedirectToLogin } from "./routes/login";
+import type {
+	ArmorConfig,
+	ArmorIdToken,
+	ArmorOauth,
+	ArmorOpenIdConfig,
+} from "./contracts";
 import { routeByPathFactory } from "./routes/routes";
 import { ArmorOpenIdConfigError } from "./errors";
-import { ArmorRefresh, armorRefreshFactory } from "./utils/refresh";
+import { armorOauthResolve } from "./utils/utils";
+import { jwtVerifyIdToken } from "./utils/jwt";
 
 export * from "./contracts";
 export * from "./session/cookie";
-export { armorRefreshFactory } from "./utils/refresh";
 export * from "./errors";
+export { armorRedirectToLogin } from "./routes/login";
 
-export interface Armor extends ArmorRefresh {
+export interface Armor {
 	readonly handle: Handle;
+	/**
+	 * The oauth configuration with every default applied. Armor does not
+	 * refresh tokens — use these values to run your own refresh_token grant.
+	 */
+	readonly oauth: ArmorOauth;
+	/**
+	 * Verify and parse an id token against the IdP's JWKS. Call this on a
+	 * rotated id token before writing it to the session, so claims you
+	 * authorize on stay current.
+	 */
+	readonly armorVerifyIdToken: (idToken: string) => Promise<ArmorIdToken>;
 }
 
 export function armor(config: ArmorConfig): Armor {
-	const routeByPath = routeByPathFactory(config);
-	const refresh = armorRefreshFactory(config);
+	const oauth = armorOauthResolve(config);
+	const jwks = createRemoteJWKSet(new URL(oauth.jwksEndpoint));
+	const routeByPath = routeByPathFactory(config, oauth, jwks);
 	const requireLogin = config.requireLogin ?? (() => true);
 
 	return {
-		...refresh,
+		oauth,
+		armorVerifyIdToken: (idToken) => jwtVerifyIdToken(config, jwks, idToken),
 		async handle({ event, resolve }) {
 			const route = routeByPath.get(event.url.pathname);
 
@@ -38,10 +58,10 @@ export function armor(config: ArmorConfig): Armor {
 				config.logger?.warning?.(
 					"Could not find tokens. Redirecting to login.",
 				);
-				throw redirect(302, loginPathWithRedirect(event));
+				armorRedirectToLogin(event);
 			}
 
-			return refresh.ensureValidToken(event, tokens, () => resolve(event));
+			return resolve(event);
 		},
 	};
 }
@@ -80,7 +100,6 @@ export async function armorConfigFromOpenId(
 			issuer: body.issuer,
 			jwksEndpoint: body.jwks_uri,
 			logoutEndpoint: body.end_session_endpoint ?? undefined,
-			refreshEndpoint: body.token_endpoint,
 		},
 	};
 }

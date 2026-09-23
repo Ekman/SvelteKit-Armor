@@ -1,13 +1,31 @@
 import { strTrimEnd, strTrimStart } from "@nekm/core";
 import type {
-	ArmorAccessToken,
+	ArmorConfig,
 	ArmorIdToken,
+	ArmorOauth,
 	ArmorTokenExchange,
 	ArmorTokens,
 } from "../contracts";
 
 export function urlConcat(origin: string, path: string): string {
 	return [strTrimEnd(origin, "/"), strTrimStart(path, "/")].join("/");
+}
+
+export function armorOauthResolve(config: ArmorConfig): ArmorOauth {
+	const { oauth } = config;
+
+	return {
+		tokenEndpoint:
+			oauth.tokenEndpoint ?? urlConcat(oauth.baseUrl, "oauth2/token"),
+		authorizeEndpoint:
+			oauth.authorizeEndpoint ?? urlConcat(oauth.baseUrl, "oauth2/authorize"),
+		jwksEndpoint:
+			oauth.jwksEndpoint ?? urlConcat(oauth.baseUrl, ".well-known/jwks.json"),
+		issuer: oauth.issuer,
+		clientId: oauth.clientId,
+		clientSecret: oauth.clientSecret,
+		scope: oauth.scope ?? "openid profile email",
+	};
 }
 
 export function safeRedirectPath(value: string | undefined): string {
@@ -39,43 +57,17 @@ export function isTokenExchange(value: unknown): value is ArmorTokenExchange {
 	);
 }
 
-const MINUTES_MS = 60 * 1000;
-
-export function shouldRefresh(
-	tokens: Pick<ArmorTokens, "idToken" | "accessToken">,
-	nowDate?: Date,
-): boolean {
-	const now = nowDate?.getTime() ?? Date.now();
-
-	const idExpiry = tokens.idToken.exp * 1000;
-
-	const accessExpiry =
-		typeof tokens.accessToken !== "string" &&
-		"exp" in tokens.accessToken &&
-		tokens.accessToken.exp !== undefined
-			? tokens.accessToken.exp * 1000
-			: Infinity;
-
-	return Math.min(idExpiry, accessExpiry) < now + 5 * MINUTES_MS;
-}
-
-export function createExpiresAt(seconds: number): Date {
-	const now = new Date();
-	now.setSeconds(now.getSeconds() + seconds);
-	return now;
+export function createExpiresAt(seconds: number): number {
+	return Date.now() + seconds * 1000;
 }
 
 export function exchangeToTokens(
 	exchange: ArmorTokenExchange,
 	idToken: ArmorIdToken,
-	accessToken?: ArmorAccessToken,
 ): ArmorTokens {
 	return {
 		exchange,
-		idToken: idToken as ArmorIdToken,
-		// Generally, IdP's require an audience to get a JWT
-		// access token. Most cases, this doesn't matter.
-		accessToken: accessToken ?? exchange.access_token,
+		idToken,
 		expiresAt: createExpiresAt(exchange.expires_in),
 	};
 }

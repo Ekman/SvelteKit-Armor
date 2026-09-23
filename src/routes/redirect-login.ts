@@ -1,11 +1,7 @@
 import { redirect } from "@sveltejs/kit";
-import type {
-	ArmorConfig,
-	ArmorIdToken,
-	ArmorTokenExchange,
-} from "../contracts";
+import type { ArmorConfig, ArmorOauth, ArmorTokenExchange } from "../contracts";
 import { queryParamsCreate, throwIfUndefined } from "@nekm/core";
-import { createRemoteJWKSet } from "jose";
+import type { JWTVerifyGetKey } from "jose";
 import type { RouteFactory } from "./routes";
 import {
 	urlConcat,
@@ -13,7 +9,7 @@ import {
 	exchangeToTokens,
 	safeRedirectPath,
 } from "../utils/utils";
-import { jwtVerifyAccessToken, jwtVerifyIdToken } from "../utils/jwt";
+import { jwtVerifyIdToken } from "../utils/jwt";
 import { eventStateValid } from "../utils/event";
 import { ROUTE_PATH_LOGIN } from "./login";
 
@@ -21,18 +17,9 @@ export const ROUTE_PATH_REDIRECT_LOGIN = "/_armor/redirect/login";
 
 export const routeRedirectLoginFactory: RouteFactory = (
 	config: ArmorConfig,
+	oauth: ArmorOauth,
+	jwks: JWTVerifyGetKey,
 ) => {
-	const jwksUrl = new URL(
-		config.oauth.jwksEndpoint ??
-			urlConcat(config.oauth.baseUrl, ".well-known/jwks.json"),
-	);
-
-	const tokenUrl =
-		config.oauth.tokenEndpoint ??
-		urlConcat(config.oauth.baseUrl, "oauth2/token");
-
-	const scope = config.oauth.scope ?? "openid profile email";
-
 	async function exchangeCodeForToken(
 		fetch: typeof global.fetch,
 		origin: string,
@@ -40,18 +27,18 @@ export const routeRedirectLoginFactory: RouteFactory = (
 	): Promise<ArmorTokenExchange> {
 		const params: Record<string, string> = {
 			grant_type: "authorization_code",
-			client_id: config.oauth.clientId,
-			client_secret: config.oauth.clientSecret,
+			client_id: oauth.clientId,
+			client_secret: oauth.clientSecret,
 			code,
 			redirect_uri: urlConcat(origin, ROUTE_PATH_REDIRECT_LOGIN),
-			scope,
+			scope: oauth.scope,
 		};
 
 		if (config.oauth.audience) {
 			params.audience = config.oauth.audience;
 		}
 
-		const response = await fetch(tokenUrl, {
+		const response = await fetch(oauth.tokenEndpoint, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded",
@@ -125,22 +112,11 @@ export const routeRedirectLoginFactory: RouteFactory = (
 
 			config.logger?.debug?.("Exchange code for tokens.", { exchange });
 
-			const jwks = createRemoteJWKSet(jwksUrl);
+			const idToken = await jwtVerifyIdToken(config, jwks, exchange.id_token);
 
-			const [idToken, accessToken] = await Promise.all([
-				jwtVerifyIdToken(config, jwks, exchange.id_token),
-				jwtVerifyAccessToken(config, jwks, exchange.access_token),
-			]);
+			config.logger?.debug?.("Extract and verify tokens.", { idToken });
 
-			config.logger?.debug?.("Extract and verify tokens.", {
-				idToken,
-				accessToken,
-			});
-
-			await config.session.login(
-				event,
-				exchangeToTokens(exchange, idToken as ArmorIdToken, accessToken),
-			);
+			await config.session.login(event, exchangeToTokens(exchange, idToken));
 
 			const target = safeRedirectPath(await config.session.getRedirect(event));
 
