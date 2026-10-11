@@ -7,6 +7,7 @@ import type { RouteFactory } from "./routes";
 import { COOKIE_STATE, cookieSet } from "../utils/cookie";
 import { urlConcat } from "../utils/utils";
 import { ARMOR_LOGIN } from "../browser";
+import { redirectExternal } from "../utils/redirect";
 
 export const ROUTE_PATH_LOGIN = ARMOR_LOGIN;
 
@@ -53,7 +54,7 @@ export const routeLoginFactory: RouteFactory = (
 
 			config.logger?.debug?.("Pre login redirect.", { params, state });
 
-			throw redirect(302, `${oauth.authorizeEndpoint}?${paramsStr}`);
+			redirectExternal(302, `${oauth.authorizeEndpoint}?${paramsStr}`);
 		},
 	};
 };

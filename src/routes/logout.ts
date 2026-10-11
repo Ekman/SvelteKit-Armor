@@ -1,4 +1,4 @@
-import { redirect } from "@sveltejs/kit";
+import { redirectExternal } from "../utils/redirect";
 import type { ArmorConfig } from "../contracts";
 import { queryParamsCreate } from "@nekm/core";
 import { ROUTE_PATH_REDIRECT_LOGOUT } from "./redirect-logout";
@@ -28,7 +28,7 @@ export const routeLogoutFactory: RouteFactory = (config: ArmorConfig) => {
 
 			config.logger?.debug?.("Pre logout redirect.", { params });
 
-			throw redirect(302, `${config.oauth.logoutEndpoint}?${paramsStr}`);
+			redirectExternal(302, `${config.oauth.logoutEndpoint}?${paramsStr}`);
 		},
 	};
 };

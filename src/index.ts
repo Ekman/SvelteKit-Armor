@@ -1,4 +1,4 @@
-import { type Handle } from "@sveltejs/kit";
+import type { Handle } from "./utils/handle";
 import { createRemoteJWKSet } from "jose";
 import { armorRedirectToLogin } from "./routes/login";
 import type {
