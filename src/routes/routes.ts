@@ -1,4 +1,4 @@
-import type { Handle } from "@sveltejs/kit";
+import type { Handle } from "../utils/handle";
 import type { JWTVerifyGetKey } from "jose";
 import type { ArmorConfig, ArmorOauth } from "../contracts";
 import { routeLoginFactory } from "./login";
