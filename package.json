@@ -73,7 +73,7 @@
 		"globals": "^17.7.0",
 		"prettier": "^3.9.5",
 		"tsup": "^8",
-		"typescript": "^6.0.3",
+		"typescript": "^7.0.2",
 		"vitest": "^5.0.4"
 	},
 	"dependencies": {
